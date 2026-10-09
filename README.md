@@ -11,8 +11,8 @@ indicator and a settings app to customize every aspect.
 - **License:** GPL-2.0-or-later (see [`LICENSE`](LICENSE))
 - **Repository:** <https://github.com/euschi/gnome_desktop_extension>
 
-> **Note:** the user interface (menus, dialogs, settings) is currently in
-> Italian. In this README the labels are translated into English.
+The user interface is in English and follows the system language when a
+translation is available (currently: Italian). See [Translations](#translations).
 
 ---
 
@@ -28,9 +28,10 @@ indicator and a settings app to customize every aspect.
 8. [How it works (architecture)](#how-it-works-architecture)
 9. [Project structure](#project-structure)
 10. [Development and debugging](#development-and-debugging)
-11. [Troubleshooting](#troubleshooting)
-12. [Publishing on extensions.gnome.org](#publishing-on-extensionsgnomeorg)
-13. [Known limitations](#known-limitations)
+11. [Translations](#translations)
+12. [Troubleshooting](#troubleshooting)
+13. [Publishing on extensions.gnome.org](#publishing-on-extensionsgnomeorg)
+14. [Known limitations](#known-limitations)
 
 ---
 
@@ -86,12 +87,12 @@ indicator and a settings app to customize every aspect.
 | libadwaita | 1.10 | `libadwaita` |
 | gnome-desktop (thumbnails) | 4.0 | `gnome-desktop-4` |
 | Nautilus (recommended) | 51 | `nautilus` |
-| Build tools | — | `glib2` (`glib-compile-schemas`), `make` |
+| Build tools | — | `glib2` (`glib-compile-schemas`), `gettext`, `make` |
 
 On Arch/EndeavourOS this is enough:
 
 ```sh
-sudo pacman -S --needed gnome-shell gjs gtk4 libadwaita gnome-desktop-4 nautilus glib2 make git
+sudo pacman -S --needed gnome-shell gjs gtk4 libadwaita gnome-desktop-4 nautilus glib2 gettext make git
 ```
 
 Nautilus is optional but strongly recommended: without it, file operations
@@ -121,7 +122,8 @@ make install
 ```
 
 This command:
-1. compiles the settings schema (`extension/schemas/gschemas.compiled`);
+1. compiles the settings schema (`extension/schemas/gschemas.compiled`) and
+   the translations (`extension/locale/`);
 2. creates the **symbolic link**
    `~/.local/share/gnome-shell/extensions/deskicons@euschi.github.io → extension/`
    (so every code change is immediately "installed");
@@ -244,7 +246,7 @@ The icon in the top-right offers: **Show icons** (hides/shows everything),
 ## Settings
 
 Open the app in one of these ways:
-- applications menu → **Icone Desktop**;
+- applications menu → **Desktop Icons**;
 - panel indicator → **Settings…**;
 - right click on the desktop → **Icon settings…**;
 - `gnome-extensions prefs deskicons@euschi.github.io`.
@@ -296,7 +298,7 @@ Icon positions are saved in `~/.local/share/deskicons/positions.json`
 ```sh
 cd gnome_desktop_extension
 git pull
-make schemas
+make schemas locale
 ```
 
 - Changes to the helper only (`extension/app/`): just use **Reload** from the
@@ -357,9 +359,10 @@ so the project is split into two processes (the same approach as DING):
 
 ```
 gnome_desktop_extension/
-├── Makefile                   # schemas, install, uninstall, zip, debug
+├── Makefile                   # schemas, locale, pot, install, uninstall, zip, debug
+├── po/                        # translations (deskicons.pot template, <lang>.po)
 ├── launcher/
-│   └── deskicons-settings.desktop   # "Icone Desktop" entry in the app menu
+│   └── deskicons-settings.desktop   # "Desktop Icons" entry in the app menu
 └── extension/                 # = the installed extension folder
     ├── metadata.json
     ├── extension.js           # entry point in the Shell
@@ -381,6 +384,7 @@ gnome_desktop_extension/
         ├── fileOps.js         # file operations (Nautilus / Gio)
         ├── clipboard.js       # Nautilus-compatible clipboard
         ├── thumbnails.js      # thumbnails (GnomeDesktop)
+        ├── i18n.js            # gettext for the helper process
         ├── utils.js
         └── style.css
 ```
@@ -412,7 +416,9 @@ journalctl -f -o cat /usr/bin/gnome-shell     # Shell + helper ("DeskIcons" mess
 - helper code → *Reload* from the indicator (or
   `gnome-extensions disable … && gnome-extensions enable …`);
 - Shell code → log out/in;
-- GSettings schema changed → `make schemas`.
+- GSettings schema changed → `make schemas`;
+- translations changed → `make locale`, then *Reload* (helper) or log
+  out/in (Shell side).
 
 **Testing in an isolated Shell (no logout):** you can run a headless Shell
 in a private D-Bus session, with configuration and data in a temporary
@@ -426,6 +432,42 @@ dbus-run-session -- sh -c '
   gsettings set org.gnome.shell enabled-extensions "[\"deskicons@euschi.github.io\"]"
   gnome-shell --headless --wayland --no-x11 --virtual-monitor 1600x900'
 ```
+
+---
+
+## Translations
+
+All user-visible strings are written in English and wrapped with gettext
+(`_()`), using the `deskicons` domain. The Shell side (`extension.js`,
+`lib/`, `prefs.js`) uses the extension's built-in gettext; the helper process
+binds the same domain to `extension/locale/` in `app/i18n.js`.
+
+```
+po/
+├── LINGUAS          # list of available languages
+├── deskicons.pot    # template, generated from the sources
+└── it.po            # Italian
+```
+
+**Adding a language** (e.g. German):
+
+```sh
+make pot                                              # refresh the template
+msginit -l de_DE.UTF-8 -i po/deskicons.pot -o po/de.po
+# translate po/de.po (e.g. with Poedit or GTranslator), then:
+echo de >> po/LINGUAS
+make locale                                           # compile into extension/locale/
+```
+
+**After changing strings in the code**, run `make pot`: it regenerates the
+template and merges the new strings into every `.po` file (new or changed
+entries are marked *fuzzy* or left untranslated).
+
+`make zip` compiles the translations into the package automatically
+(`gnome-extensions pack --podir`). To test a language without changing the
+system one: `LANGUAGE=it make debug`.
+
+Pull requests with new translations are welcome.
 
 ---
 

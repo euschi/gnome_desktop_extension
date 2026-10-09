@@ -5,17 +5,7 @@ import Adw from 'gi://Adw';
 import Gio from 'gi://Gio';
 import Gtk from 'gi://Gtk';
 
-import {ExtensionPreferences} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
-
-// [valore, etichetta]
-const LABEL_STYLES = [['shadow', 'Ombra'], ['background', 'Sfondo scuro'], ['none', 'Nessuno']];
-const CORNERS = [['top-left', 'In alto a sinistra'], ['top-right', 'In alto a destra'],
-    ['bottom-left', 'In basso a sinistra'], ['bottom-right', 'In basso a destra']];
-const DIRECTIONS = [['columns', 'Prima le colonne (verticale)'], ['rows', 'Prima le righe (orizzontale)']];
-const SORTS = [['name', 'Nome'], ['modified', 'Data di modifica'], ['type', 'Tipo'], ['size', 'Dimensione']];
-const MONITORS = [['all', 'Tutti i monitor'], ['primary', 'Solo il monitor principale']];
-const CLICKS = [['double', 'Doppio click'], ['single', 'Click singolo']];
-const LAUNCHERS = [['ask', 'Chiedi conferma'], ['always', 'Avvia sempre']];
+import {ExtensionPreferences, gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 export default class DeskIconsPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
@@ -23,6 +13,19 @@ export default class DeskIconsPreferences extends ExtensionPreferences {
         window._settings = settings;
         window.set_default_size(640, 720);
         window.set_search_enabled(true);
+
+        // [valore, etichetta]
+        const LABEL_STYLES = [['shadow', _('Shadow')], ['background', _('Dark Background')],
+            ['none', _('None')]];
+        const CORNERS = [['top-left', _('Top Left')], ['top-right', _('Top Right')],
+            ['bottom-left', _('Bottom Left')], ['bottom-right', _('Bottom Right')]];
+        const DIRECTIONS = [['columns', _('Columns First (vertical)')],
+            ['rows', _('Rows First (horizontal)')]];
+        const SORTS = [['name', _('Name')], ['modified', _('Modification Date')],
+            ['type', _('Type')], ['size', _('Size')]];
+        const MONITORS = [['all', _('All Monitors')], ['primary', _('Primary Monitor Only')]];
+        const CLICKS = [['double', _('Double Click')], ['single', _('Single Click')]];
+        const LAUNCHERS = [['ask', _('Ask for Confirmation')], ['always', _('Always Launch')]];
 
         const switchRow = (key, title, subtitle = null) => {
             const row = new Adw.SwitchRow({title, subtitle});
@@ -72,81 +75,77 @@ export default class DeskIconsPreferences extends ExtensionPreferences {
             return p;
         };
 
-        // Aspetto
-        page('Aspetto', 'applications-graphics-symbolic', [
-            group('Icone', [
-                spinRow('icon-size', 'Dimensione icone', 32, 128, 8, 'In pixel'),
-                spinRow('item-spacing', 'Spaziatura', 0, 48, 2, 'Spazio tra le icone in pixel'),
-                switchRow('show-thumbnails', 'Mostra anteprime', 'Miniature di immagini, video e documenti'),
+        page(_('Appearance'), 'applications-graphics-symbolic', [
+            group(_('Icons'), [
+                spinRow('icon-size', _('Icon Size'), 32, 128, 8, _('In pixels')),
+                spinRow('item-spacing', _('Spacing'), 0, 48, 2, _('Space between icons in pixels')),
+                switchRow('show-thumbnails', _('Show Thumbnails'), _('Previews of images, videos and documents')),
             ]),
-            group('Etichette', [
-                spinRow('label-lines', 'Righe massime', 1, 4),
-                comboRow('label-style', 'Stile', LABEL_STYLES),
+            group(_('Labels'), [
+                spinRow('label-lines', _('Maximum Lines'), 1, 4),
+                comboRow('label-style', _('Style'), LABEL_STYLES),
             ]),
         ]);
 
-        // Disposizione
-        page('Disposizione', 'view-grid-symbolic', [
-            group('Nuove icone', [
-                comboRow('start-corner', 'Angolo di partenza', CORNERS,
-                    'Dove compaiono le nuove icone'),
-                comboRow('fill-direction', 'Direzione di riempimento', DIRECTIONS),
-                comboRow('monitors', 'Monitor', MONITORS),
+        page(_('Layout'), 'view-grid-symbolic', [
+            group(_('New Icons'), [
+                comboRow('start-corner', _('Start Corner'), CORNERS,
+                    _('Where new icons appear')),
+                comboRow('fill-direction', _('Fill Direction'), DIRECTIONS),
+                comboRow('monitors', _('Monitors'), MONITORS),
             ]),
-            group('Griglia', [
-                switchRow('snap-to-grid', 'Allinea alla griglia',
-                    'Se disattivato le icone restano esattamente dove le rilasci'),
-                switchRow('keep-arranged', 'Mantieni ordinate',
-                    'Le icone vengono sempre disposte secondo l\'ordinamento'),
-                comboRow('sort-by', 'Ordina per', SORTS),
-                switchRow('sort-reverse', 'Ordine inverso'),
-                switchRow('folders-first', 'Cartelle prima dei file'),
+            group(_('Grid'), [
+                switchRow('snap-to-grid', _('Align to Grid'),
+                    _('When off, icons stay exactly where you drop them')),
+                switchRow('keep-arranged', _('Keep Arranged'),
+                    _('Icons are always laid out according to the sort order')),
+                comboRow('sort-by', _('Sort By'), SORTS),
+                switchRow('sort-reverse', _('Reverse Order')),
+                switchRow('folders-first', _('Folders Before Files')),
             ]),
-            group('Margini', [
-                spinRow('margin-top', 'Superiore', 0, 400, 4),
-                spinRow('margin-bottom', 'Inferiore', 0, 400, 4),
-                spinRow('margin-left', 'Sinistro', 0, 400, 4),
-                spinRow('margin-right', 'Destro', 0, 400, 4),
-            ], 'Spazio libero ai bordi dello schermo, in pixel'),
+            group(_('Margins'), [
+                spinRow('margin-top', _('Top'), 0, 400, 4),
+                spinRow('margin-bottom', _('Bottom'), 0, 400, 4),
+                spinRow('margin-left', _('Left'), 0, 400, 4),
+                spinRow('margin-right', _('Right'), 0, 400, 4),
+            ], _('Free space at the screen edges, in pixels')),
         ]);
 
-        // Comportamento
-        const terminal = new Adw.EntryRow({title: 'Terminale (vuoto = automatico)'});
+                const terminal = new Adw.EntryRow({title: _('Terminal (empty = automatic)')});
         settings.bind('terminal', terminal, 'text', Gio.SettingsBindFlags.DEFAULT);
 
-        const reset = new Adw.ButtonRow({title: 'Ripristina impostazioni predefinite'});
+        const reset = new Adw.ButtonRow({title: _('Reset to Defaults')});
         reset.add_css_class('destructive-action');
         reset.connect('activated', () => {
             for (const key of settings.settings_schema.list_keys())
                 settings.reset(key);
         });
 
-        page('Comportamento', 'preferences-system-symbolic', [
-            group('Apertura', [
-                comboRow('click-policy', 'Apri gli elementi con', CLICKS),
-                comboRow('launcher-policy', 'Lanciatori .desktop non attendibili', LAUNCHERS),
+        page(_('Behavior'), 'preferences-system-symbolic', [
+            group(_('Opening'), [
+                comboRow('click-policy', _('Open Items With'), CLICKS),
+                comboRow('launcher-policy', _('Untrusted .desktop Launchers'), LAUNCHERS),
                 terminal,
             ]),
-            group('Sicurezza', [
-                switchRow('confirm-trash', 'Conferma prima di spostare nel cestino'),
+            group(_('Safety'), [
+                switchRow('confirm-trash', _('Confirm Before Moving to Trash')),
             ]),
-            group('Pannello', [
-                switchRow('show-indicator', 'Mostra indicatore nel pannello'),
-                switchRow('icons-visible', 'Mostra icone sul desktop'),
+            group(_('Panel'), [
+                switchRow('show-indicator', _('Show Panel Indicator')),
+                switchRow('icons-visible', _('Show Icons on the Desktop')),
             ]),
             group('', [reset]),
         ]);
 
-        // Elementi
-        page('Elementi', 'folder-symbolic', [
-            group('Elementi speciali', [
-                switchRow('show-home', 'Cartella Home'),
-                switchRow('show-trash', 'Cestino'),
-                switchRow('show-volumes', 'Unità montate', 'Dischi e chiavette USB'),
-                switchRow('show-network-volumes', 'Unità di rete'),
+        page(_('Items'), 'folder-symbolic', [
+            group(_('Special Items'), [
+                switchRow('show-home', _('Home Folder')),
+                switchRow('show-trash', _('Trash')),
+                switchRow('show-volumes', _('Mounted Drives'), _('Disks and USB sticks')),
+                switchRow('show-network-volumes', _('Network Drives')),
             ]),
-            group('File', [
-                switchRow('show-hidden', 'Mostra file nascosti'),
+            group(_('Files'), [
+                switchRow('show-hidden', _('Show Hidden Files')),
             ]),
         ]);
     }

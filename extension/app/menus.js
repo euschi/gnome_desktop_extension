@@ -7,6 +7,7 @@
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
 
+import {_} from './i18n.js';
 import {templatesDir} from './utils.js';
 
 function item(label, action, target = null) {
@@ -54,42 +55,42 @@ function templatesMenu() {
 export function backgroundMenu() {
     const menu = new Gio.Menu();
 
-    const create = section(item('Nuova cartella', 'new-folder'));
+    const create = section(item(_('New Folder'), 'new-folder'));
     const templates = templatesMenu();
     if (templates.get_n_items() > 0)
-        create.append_submenu('Nuovo documento', templates);
+        create.append_submenu(_('New Document'), templates);
     menu.append_section(null, create);
 
     menu.append_section(null, section(
-        item('Incolla', 'paste'),
-        item('Annulla', 'undo'),
-        item('Ripeti', 'redo')));
+        item(_('Paste'), 'paste'),
+        item(_('Undo'), 'undo'),
+        item(_('Redo'), 'redo')));
 
     const sort = new Gio.Menu();
-    for (const [key, label] of [['name', 'Nome'], ['modified', 'Data di modifica'],
-        ['type', 'Tipo'], ['size', 'Dimensione']])
+    for (const [key, label] of [['name', _('Name')], ['modified', _('Modification Date')],
+        ['type', _('Type')], ['size', _('Size')]])
         sort.append_item(item(label, 'sort-by', new GLib.Variant('s', key)));
     sort.append_section(null, section(
-        item('Ordine inverso', 'sort-reverse'),
-        item('Cartelle prima', 'folders-first')));
+        item(_('Reverse Order'), 'sort-reverse'),
+        item(_('Folders First'), 'folders-first')));
 
     const arrange = section(
-        item('Seleziona tutto', 'select-all'),
-        item('Disponi icone', 'arrange'),
-        item('Mantieni ordinate', 'keep-arranged'),
-        item('Allinea alla griglia', 'snap-to-grid'),
-        item('Mostra file nascosti', 'show-hidden'));
-    arrange.insert_submenu(1, 'Ordina per', sort);
+        item(_('Select All'), 'select-all'),
+        item(_('Arrange Icons'), 'arrange'),
+        item(_('Keep Arranged'), 'keep-arranged'),
+        item(_('Align to Grid'), 'snap-to-grid'),
+        item(_('Show Hidden Files'), 'show-hidden'));
+    arrange.insert_submenu(1, _('Sort By'), sort);
     menu.append_section(null, arrange);
 
     menu.append_section(null, section(
-        item('Apri nel terminale', 'open-terminal-desktop'),
-        item('Apri Scrivania in File', 'open-desktop-folder')));
+        item(_('Open in Terminal'), 'open-terminal-desktop'),
+        item(_('Open Desktop in Files'), 'open-desktop-folder')));
 
     menu.append_section(null, section(
-        item('Cambia sfondo…', 'change-background'),
-        item('Mostra icone', 'icons-visible'),
-        item('Impostazioni icone…', 'preferences')));
+        item(_('Change Background…'), 'change-background'),
+        item(_('Show Icons'), 'icons-visible'),
+        item(_('Icon Settings…'), 'preferences')));
     return menu;
 }
 
@@ -102,49 +103,49 @@ export function itemMenu(ctx) {
 
     // Elementi speciali (selezione singola)
     if (single?.kind === 'trash') {
-        menu.append_section(null, section(item('Apri', 'open')));
-        menu.append_section(null, section(item('Svuota cestino', 'empty-trash')));
+        menu.append_section(null, section(item(_('Open'), 'open')));
+        menu.append_section(null, section(item(_('Empty Trash'), 'empty-trash')));
         return menu;
     }
     if (single?.kind === 'mount') {
-        menu.append_section(null, section(item('Apri', 'open'),
-            item('Apri nel terminale', 'open-terminal')));
+        menu.append_section(null, section(item(_('Open'), 'open'),
+            item(_('Open in Terminal'), 'open-terminal')));
         menu.append_section(null, section(
-            single.mount.can_eject() ? item('Espelli', 'eject') : null,
-            single.mount.can_unmount() ? item('Smonta', 'unmount') : null));
+            single.mount.can_eject() ? item(_('Eject'), 'eject') : null,
+            single.mount.can_unmount() ? item(_('Unmount'), 'unmount') : null));
         return menu;
     }
     if (single?.kind === 'home') {
-        menu.append_section(null, section(item('Apri', 'open'),
-            item('Apri nel terminale', 'open-terminal')));
-        menu.append_section(null, section(item('Proprietà', 'properties')));
+        menu.append_section(null, section(item(_('Open'), 'open'),
+            item(_('Open in Terminal'), 'open-terminal')));
+        menu.append_section(null, section(item(_('Properties'), 'properties')));
         return menu;
     }
 
     const open = section(
-        item(single?.isLauncher ? 'Esegui' : 'Apri', 'open'),
-        single?.isLauncher && !single.isTrusted ? item('Consenti avvio', 'allow-launch') : null);
+        item(single?.isLauncher ? _('Run') : _('Open'), 'open'),
+        single?.isLauncher && !single.isTrusted ? item(_('Allow Launching'), 'allow-launch') : null);
     if (ctx.appsForType?.length) {
         const apps = new Gio.Menu();
         for (const app of ctx.appsForType)
             apps.append_item(item(app.get_name(), 'open-with', new GLib.Variant('s', app.get_id())));
-        open.append_submenu('Apri con', apps);
+        open.append_submenu(_('Open With'), apps);
     }
     menu.append_section(null, open);
 
     if (onlyFiles) {
         menu.append_section(null, section(
-            item('Taglia', 'cut'),
-            item('Copia', 'copy'),
-            item('Copia percorso', 'copy-path')));
+            item(_('Cut'), 'cut'),
+            item(_('Copy'), 'copy'),
+            item(_('Copy Path'), 'copy-path')));
         menu.append_section(null, section(
-            single ? item('Rinomina…', 'rename') : null,
-            item('Sposta nel cestino', 'trash'),
-            item('Elimina definitivamente', 'delete')));
+            single ? item(_('Rename…'), 'rename') : null,
+            item(_('Move to Trash'), 'trash'),
+            item(_('Delete Permanently'), 'delete')));
         menu.append_section(null, section(
-            item('Mostra in File', 'show-in-files'),
-            single?.isDir ? item('Apri nel terminale', 'open-terminal') : null,
-            item('Proprietà', 'properties')));
+            item(_('Show in Files'), 'show-in-files'),
+            single?.isDir ? item(_('Open in Terminal'), 'open-terminal') : null,
+            item(_('Properties'), 'properties')));
     }
     return menu;
 }

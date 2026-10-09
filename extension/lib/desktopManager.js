@@ -86,7 +86,7 @@ export class DesktopManager {
 
         const gjs = GLib.find_program_in_path('gjs');
         if (!gjs) {
-            logError(new Error('gjs non trovato nel PATH'), 'DeskIcons');
+            logError(new Error('gjs not found in PATH'), 'DeskIcons');
             return;
         }
 
@@ -105,7 +105,7 @@ export class DesktopManager {
             launcher.set_cwd(GLib.get_home_dir());
             this._client = Meta.WaylandClient.new_subprocess(global.context, launcher, argv);
         } catch (e) {
-            logError(e, 'DeskIcons: impossibile avviare l\'helper');
+            logError(e, 'DeskIcons: cannot start the helper');
             this._client = null;
             return;
         }
@@ -142,7 +142,7 @@ export class DesktopManager {
         this._crashes = this._crashes.filter(t => now - t < CRASH_WINDOW_US);
         this._crashes.push(now);
         if (this._crashes.length > MAX_CRASHES) {
-            logError(new Error('helper terminato troppe volte, non lo riavvio'), 'DeskIcons');
+            logError(new Error('helper exited too many times, not restarting it'), 'DeskIcons');
             return;
         }
         this._scheduleLaunch(RESTART_DELAY_MS);

@@ -72,7 +72,7 @@ export class Clipboard {
                 return {uris: parseUriList(await readStreamToString(stream)), cut: false};
             }
         } catch (e) {
-            console.error(`DeskIcons: lettura appunti fallita: ${e.message}`);
+            console.error(`DeskIcons: clipboard read failed: ${e.message}`);
         }
         return null;
     }

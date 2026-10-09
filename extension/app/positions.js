@@ -88,7 +88,7 @@ export class PositionStore {
             this._file.replace_contents(new TextEncoder().encode(JSON.stringify(this._data)),
                 null, false, Gio.FileCreateFlags.REPLACE_DESTINATION, null);
         } catch (e) {
-            console.error(`DeskIcons: impossibile salvare le posizioni: ${e.message}`);
+            console.error(`DeskIcons: cannot save positions: ${e.message}`);
         }
     }
 }

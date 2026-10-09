@@ -12,21 +12,15 @@ import St from 'gi://St';
 
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
+import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 export const HELPER_BUS_NAME = 'it.eugenio.DeskIcons';
 export const HELPER_OBJECT_PATH = '/it/eugenio/DeskIcons';
 
-const SORT_OPTIONS = [
-    ['name', 'Nome'],
-    ['modified', 'Data di modifica'],
-    ['type', 'Tipo'],
-    ['size', 'Dimensione'],
-];
-
 export const DeskIconsIndicator = GObject.registerClass(
 class DeskIconsIndicator extends PanelMenu.Button {
     _init(extension, manager) {
-        super._init(0.0, 'Icone Desktop');
+        super._init(0.0, _('Desktop Icons'));
         this._extension = extension;
         this._manager = manager;
         this._settings = extension.getSettings();
@@ -45,13 +39,13 @@ class DeskIconsIndicator extends PanelMenu.Button {
     _buildMenu() {
         const menu = this.menu;
 
-        const visible = new PopupMenu.PopupSwitchMenuItem('Mostra icone',
+        const visible = new PopupMenu.PopupSwitchMenuItem(_('Show Icons'),
             this._settings.get_boolean('icons-visible'));
         visible.connect('toggled', (_i, state) =>
             this._settings.set_boolean('icons-visible', state));
         menu.addMenuItem(visible);
 
-        const arranged = new PopupMenu.PopupSwitchMenuItem('Mantieni ordinate',
+        const arranged = new PopupMenu.PopupSwitchMenuItem(_('Keep Arranged'),
             this._settings.get_boolean('keep-arranged'));
         arranged.connect('toggled', (_i, state) =>
             this._settings.set_boolean('keep-arranged', state));
@@ -66,11 +60,17 @@ class DeskIconsIndicator extends PanelMenu.Button {
 
         menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 
-        menu.addAction('Disponi icone', () => this._activate('arrange'));
+        menu.addAction(_('Arrange Icons'), () => this._activate('arrange'));
 
-        const sort = new PopupMenu.PopupSubMenuMenuItem('Ordina per');
+        const sort = new PopupMenu.PopupSubMenuMenuItem(_('Sort By'));
         const sortItems = [];
-        for (const [key, label] of SORT_OPTIONS) {
+        const sortOptions = [
+            ['name', _('Name')],
+            ['modified', _('Modification Date')],
+            ['type', _('Type')],
+            ['size', _('Size')],
+        ];
+        for (const [key, label] of sortOptions) {
             const item = sort.menu.addAction(label, () => {
                 // Il cambio di impostazione riordina già le icone
                 if (this._settings.get_string('sort-by') === key)
@@ -92,20 +92,20 @@ class DeskIconsIndicator extends PanelMenu.Button {
         this._settingsIds.push(this._settings.connect('changed::sort-by', updateSort));
         menu.addMenuItem(sort);
 
-        menu.addAction('Nuova cartella', () => this._activate('new-folder'));
+        menu.addAction(_('New Folder'), () => this._activate('new-folder'));
 
         menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 
-        menu.addAction('Apri Scrivania in File', () => this._openDesktopFolder());
-        menu.addAction('Ricarica', () => this._manager.restart());
-        menu.addAction('Impostazioni…', () => this._extension.openPreferences());
+        menu.addAction(_('Open Desktop in Files'), () => this._openDesktopFolder());
+        menu.addAction(_('Reload'), () => this._manager.restart());
+        menu.addAction(_('Settings…'), () => this._extension.openPreferences());
     }
 
     _activate(name, param = null) {
         try {
             this._actions.activate_action(name, param);
         } catch (e) {
-            logError(e, `DeskIcons: azione ${name}`);
+            logError(e, `DeskIcons: action ${name}`);
         }
     }
 

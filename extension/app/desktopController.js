@@ -19,6 +19,7 @@ import {Clipboard} from './clipboard.js';
 import {GridGeometry, computeLayout, arrangedLayout, itemSize} from './layout.js';
 import * as FileOps from './fileOps.js';
 import * as Menus from './menus.js';
+import {_, ngettext} from './i18n.js';
 import {launchContext, openTerminal, parseUriList, readStreamToString, spawn,
     uniqueName, uriListProvider} from './utils.js';
 
@@ -122,7 +123,7 @@ export class DesktopController {
             });
             action.connect('activate', (_a, param) => {
                 Promise.resolve(cb(param?.unpack())).catch(e =>
-                    console.error(`DeskIcons: azione ${name}: ${e.message}`));
+                    console.error(`DeskIcons: action ${name}: ${e.message}`));
             });
             this._actions.add_action(action);
             return action;
@@ -646,7 +647,7 @@ export class DesktopController {
             const handled = await this._handleDrop(win, drop, x, y, action);
             drop.finish(handled ? action : 0);
         } catch (e) {
-            console.error(`DeskIcons: drop fallito: ${e.message}`);
+            console.error(`DeskIcons: drop failed: ${e.message}`);
             drop.finish(0);
         }
         this._incoming = null;
@@ -758,7 +759,7 @@ export class DesktopController {
     _openSelection() {
         for (const item of this._selectedItems()) {
             this._openItem(item).catch(e =>
-                console.error(`DeskIcons: apertura ${item.displayName}: ${e.message}`));
+                console.error(`DeskIcons: opening ${item.displayName}: ${e.message}`));
         }
     }
 
@@ -770,10 +771,11 @@ export class DesktopController {
     async _launch(item) {
         if (!item.isTrusted) {
             if (this.settings.get_string('launcher-policy') !== 'always') {
-                const ok = await this._confirm('Lanciatore non attendibile',
-                    `«${item.displayName}» non è contrassegnato come attendibile. ` +
-                    'Avvialo solo se ne conosci la provenienza.',
-                    'Consenti e avvia', Adw.ResponseAppearance.SUGGESTED);
+                const ok = await this._confirm(_('Untrusted Launcher'),
+                    // Translators: %s is the name of the launcher
+                    _('“%s” is not marked as trusted. Only launch it if you know where it comes from.')
+                        .replace('%s', item.displayName),
+                    _('Allow and Launch'), Adw.ResponseAppearance.SUGGESTED);
                 if (!ok)
                     return;
             }
@@ -792,7 +794,7 @@ export class DesktopController {
             item.file.set_attribute_string('metadata::trusted', 'true',
                 Gio.FileQueryInfoFlags.NONE, null);
         } catch (e) {
-            console.error(`DeskIcons: impossibile rendere attendibile: ${e.message}`);
+            console.error(`DeskIcons: cannot mark as trusted: ${e.message}`);
         }
         this._model.scheduleReload();
     }
@@ -838,10 +840,12 @@ export class DesktopController {
         if (!uris.length)
             return;
         if (this.settings.get_boolean('confirm-trash')) {
-            const ok = await this._confirm('Spostare nel cestino?',
-                uris.length === 1 ? 'L\'elemento selezionato verrà spostato nel cestino.'
-                    : `${uris.length} elementi verranno spostati nel cestino.`,
-                'Sposta nel cestino', Adw.ResponseAppearance.DESTRUCTIVE);
+            const ok = await this._confirm(_('Move to Trash?'),
+                // Translators: %d is the number of selected items
+                ngettext('The selected item will be moved to the trash.',
+                    '%d items will be moved to the trash.', uris.length)
+                    .replace('%d', uris.length),
+                _('Move to Trash'), Adw.ResponseAppearance.DESTRUCTIVE);
             if (!ok)
                 return;
         }
@@ -859,7 +863,7 @@ export class DesktopController {
             else
                 await item.mount.unmount_with_operation(Gio.MountUnmountFlags.NONE, op, null);
         } catch (e) {
-            await this._confirm(eject ? 'Impossibile espellere' : 'Impossibile smontare',
+            await this._confirm(eject ? _('Unable to Eject') : _('Unable to Unmount'),
                 e.message, null);
         }
     }
@@ -871,7 +875,7 @@ export class DesktopController {
     }
 
     async newFolder() {
-        const name = uniqueName(this._model.dir, 'Nuova cartella');
+        const name = uniqueName(this._model.dir, _('New Folder'));
         const id = `file:${name}`;
         this._placeNew(id);
         this._pendingRename = id;
@@ -892,12 +896,12 @@ export class DesktopController {
         return new Promise(resolve => {
             const dialog = new Adw.AlertDialog({heading, body});
             if (okLabel) {
-                dialog.add_response('cancel', 'Annulla');
+                dialog.add_response('cancel', _('Cancel'));
                 dialog.add_response('ok', okLabel);
                 dialog.set_response_appearance('ok', appearance);
                 dialog.set_default_response('ok');
             } else {
-                dialog.add_response('ok', 'OK');
+                dialog.add_response('ok', _('OK'));
             }
             dialog.set_close_response('cancel');
             dialog.connect('response', (_d, response) => resolve(okLabel ? response === 'ok' : true));
