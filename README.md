@@ -1,284 +1,281 @@
-# Icone Desktop — estensione per GNOME Shell
+# Icone Desktop — GNOME Shell extension
 
-Riporta le **icone sul desktop** in GNOME. Mostra il contenuto della cartella
-Scrivania (più Cestino, Home e unità montate) direttamente sullo sfondo, con
-tutto quello che ci si aspetta da un desktop "classico": selezione multipla,
-spostamento libero delle icone, drag & drop con Nautilus, menù contestuali,
-un indicatore nel pannello e un'app per personalizzare ogni aspetto.
+Brings **desktop icons** back to GNOME. It shows the contents of the Desktop
+folder (plus Trash, Home and mounted drives) right on the wallpaper, with
+everything you would expect from a "classic" desktop: multiple selection,
+free icon placement, drag & drop with Nautilus, context menus, a panel
+indicator and a settings app to customize every aspect.
 
 - **UUID:** `deskicons@euschi.github.io`
-- **GNOME Shell supportata:** 51 (sessione **Wayland**)
-- **Licenza:** GPL-2.0-or-later (vedi [`LICENSE`](LICENSE))
+- **Supported GNOME Shell:** 51 (**Wayland** session)
+- **License:** GPL-2.0-or-later (see [`LICENSE`](LICENSE))
 - **Repository:** <https://github.com/euschi/gnome_desktop_extension>
 
----
-
-## Indice
-
-1. [Funzionalità](#funzionalità)
-2. [Requisiti](#requisiti)
-3. [Installazione](#installazione)
-4. [Primo avvio e verifica](#primo-avvio-e-verifica)
-5. [Guida all'uso](#guida-alluso)
-6. [Impostazioni](#impostazioni)
-7. [Aggiornamento e disinstallazione](#aggiornamento-e-disinstallazione)
-8. [Come funziona (architettura)](#come-funziona-architettura)
-9. [Struttura del progetto](#struttura-del-progetto)
-10. [Sviluppo e debug](#sviluppo-e-debug)
-11. [Risoluzione dei problemi](#risoluzione-dei-problemi)
-12. [Pubblicazione su extensions.gnome.org](#pubblicazione-su-extensionsgnomeorg)
-13. [Limitazioni note](#limitazioni-note)
+> **Note:** the user interface (menus, dialogs, settings) is currently in
+> Italian. In this README the labels are translated into English.
 
 ---
 
-## Funzionalità
+## Contents
 
-**Icone**
-- Mostra file e cartelle della Scrivania (`xdg-user-dir DESKTOP`, es. `~/Scrivania`).
-- Elementi speciali opzionali: **Cestino** (icona piena/vuota), **Home**,
-  **unità montate** (chiavette, dischi) e **unità di rete**.
-- **Anteprime** di immagini, video e documenti (stessa cache di Nautilus).
-- I lanciatori `.desktop` mostrano nome e icona dell'applicazione; quelli non
-  attendibili hanno un emblema e chiedono conferma prima dell'avvio.
-- Aggiornamento automatico: file creati, rinominati o cancellati da qualunque
-  programma compaiono/spariscono subito.
-
-**Selezione e spostamento**
-- Click, **Ctrl+click** (aggiungi/togli), **Shift+click** (intervallo),
-  **rettangolo di selezione** trascinando sullo sfondo.
-- Trascina una o più icone **dove vuoi**: con allineamento alla griglia o in
-  posizione libera al pixel. Le posizioni vengono **ricordate**.
-- Rilascia le icone **su una cartella** per spostarle dentro, **sul Cestino**
-  per cestinarle, su un **lanciatore** per aprirle con quell'app.
-- **Drag & drop con Nautilus** e altre applicazioni, in entrambe le direzioni
-  (sposta sullo stesso disco, copia tra dischi diversi, come Nautilus).
-
-**Menù**
-- **Tasto destro sullo sfondo:** nuova cartella, nuovo documento (dai modelli
-  in `~/Modelli`), incolla, annulla/ripeti, seleziona tutto, ordina per,
-  disponi icone, mantieni ordinate, allinea alla griglia, mostra file
-  nascosti, apri nel terminale, apri Scrivania in File, cambia sfondo,
-  mostra icone, impostazioni.
-- **Tasto destro su icone:** apri / esegui, apri con…, consenti avvio,
-  taglia, copia, copia percorso, rinomina, sposta nel cestino, elimina
-  definitivamente, mostra in File, apri nel terminale, proprietà.
-  Voci dedicate per Cestino (svuota) e unità (smonta / espelli).
-- **Indicatore nel pannello** in alto a destra con le azioni rapide.
-
-**Integrazione**
-- Copia/taglia/incolla compatibili con Nautilus (puoi copiare in Nautilus e
-  incollare sul desktop e viceversa).
-- Operazioni sui file eseguite tramite Nautilus: finestre di avanzamento,
-  gestione dei conflitti e **annulla/ripeti condiviso** con il file manager.
-- Multi-monitor: icone su tutti i monitor o solo sul principale.
+1. [Features](#features)
+2. [Requirements](#requirements)
+3. [Installation](#installation)
+4. [First run and verification](#first-run-and-verification)
+5. [Usage](#usage)
+6. [Settings](#settings)
+7. [Updating and uninstalling](#updating-and-uninstalling)
+8. [How it works (architecture)](#how-it-works-architecture)
+9. [Project structure](#project-structure)
+10. [Development and debugging](#development-and-debugging)
+11. [Troubleshooting](#troubleshooting)
+12. [Publishing on extensions.gnome.org](#publishing-on-extensionsgnomeorg)
+13. [Known limitations](#known-limitations)
 
 ---
 
-## Requisiti
+## Features
 
-| Componente | Versione testata | Pacchetto Arch/EndeavourOS |
+**Icons**
+- Shows files and folders of the Desktop (`xdg-user-dir DESKTOP`, e.g. `~/Desktop`).
+- Optional special items: **Trash** (full/empty icon), **Home**,
+  **mounted drives** (USB sticks, disks) and **network drives**.
+- **Thumbnails** of images, videos and documents (same cache as Nautilus).
+- `.desktop` launchers show the application's name and icon; untrusted ones
+  get an emblem and ask for confirmation before launching.
+- Automatic refresh: files created, renamed or deleted by any program
+  appear/disappear immediately.
+
+**Selection and moving**
+- Click, **Ctrl+click** (add/remove), **Shift+click** (range),
+  **rubber-band selection** by dragging on the background.
+- Drag one or more icons **anywhere**: aligned to the grid or freely
+  positioned to the pixel. Positions are **remembered**.
+- Drop icons **onto a folder** to move them inside, **onto the Trash** to
+  trash them, onto a **launcher** to open them with that app.
+- **Drag & drop with Nautilus** and other applications, in both directions
+  (move on the same disk, copy across disks, like Nautilus).
+
+**Menus**
+- **Right click on the background:** new folder, new document (from the
+  templates in `~/Templates`), paste, undo/redo, select all, sort by,
+  arrange icons, keep arranged, align to grid, show hidden files, open in
+  terminal, open Desktop in Files, change background, show icons, settings.
+- **Right click on icons:** open / run, open with…, allow launching, cut,
+  copy, copy path, rename, move to trash, delete permanently, show in Files,
+  open in terminal, properties. Dedicated entries for Trash (empty) and
+  drives (unmount / eject).
+- **Panel indicator** in the top-right corner with quick actions.
+
+**Integration**
+- Copy/cut/paste compatible with Nautilus (copy in Nautilus and paste on the
+  desktop, and vice versa).
+- File operations performed through Nautilus: progress windows, conflict
+  handling and **undo/redo shared** with the file manager.
+- Multi-monitor: icons on all monitors or only on the primary one.
+
+---
+
+## Requirements
+
+| Component | Tested version | Arch/EndeavourOS package |
 | --- | --- | --- |
 | GNOME Shell | 51 | `gnome-shell` |
 | gjs | 1.90 | `gjs` |
 | GTK 4 | 4.24 | `gtk4` |
 | libadwaita | 1.10 | `libadwaita` |
-| gnome-desktop (miniature) | 4.0 | `gnome-desktop-4` |
-| Nautilus (consigliato) | 51 | `nautilus` |
-| Strumenti di build | — | `glib2` (`glib-compile-schemas`), `make` |
+| gnome-desktop (thumbnails) | 4.0 | `gnome-desktop-4` |
+| Nautilus (recommended) | 51 | `nautilus` |
+| Build tools | — | `glib2` (`glib-compile-schemas`), `make` |
 
-Su Arch/EndeavourOS è sufficiente:
+On Arch/EndeavourOS this is enough:
 
 ```sh
 sudo pacman -S --needed gnome-shell gjs gtk4 libadwaita gnome-desktop-4 nautilus glib2 make git
 ```
 
-Nautilus è opzionale ma fortemente consigliato: senza, le operazioni sui file
-funzionano comunque (tramite Gio) ma senza finestre di avanzamento né
-annulla/ripeti.
+Nautilus is optional but strongly recommended: without it, file operations
+still work (through Gio) but without progress windows or undo/redo.
 
-> **Importante:** non usare questa estensione insieme a un'altra estensione di
-> icone desktop (es. *Desktop Icons NG (DING)* o *Gtk4 Desktop Icons NG*).
-> Disattivale prima: `gnome-extensions disable ding@rastersoft.com`.
+> **Important:** do not use this extension together with another desktop
+> icons extension (e.g. *Desktop Icons NG (DING)* or *Gtk4 Desktop Icons NG*).
+> Disable them first: `gnome-extensions disable ding@rastersoft.com`.
 
 ---
 
-## Installazione
+## Installation
 
-### 1. Scarica il progetto
+### 1. Get the project
 
 ```sh
-mkdir -p ~/Documenti/my_code
-cd ~/Documenti/my_code
-git clone git@github.com:euschi/gnome_desktop_extension.git estensione_desktop
-cd estensione_desktop
+git clone git@github.com:euschi/gnome_desktop_extension.git
+cd gnome_desktop_extension
 ```
 
-(Con HTTPS: `git clone https://github.com/euschi/gnome_desktop_extension.git estensione_desktop`.)
+(With HTTPS: `git clone https://github.com/euschi/gnome_desktop_extension.git`.)
 
-### 2. Installa
+### 2. Install
 
 ```sh
 make install
 ```
 
-Il comando:
-1. compila lo schema delle impostazioni (`extension/schemas/gschemas.compiled`);
-2. crea il **collegamento simbolico**
+This command:
+1. compiles the settings schema (`extension/schemas/gschemas.compiled`);
+2. creates the **symbolic link**
    `~/.local/share/gnome-shell/extensions/deskicons@euschi.github.io → extension/`
-   (così ogni modifica al codice è subito "installata");
-3. copia il lanciatore delle impostazioni in
+   (so every code change is immediately "installed");
+3. copies the settings launcher to
    `~/.local/share/applications/deskicons-settings.desktop`.
 
-### 3. Riavvia la sessione
+### 3. Restart the session
 
-Su **Wayland** GNOME Shell non può essere riavviata a caldo: per far
-riconoscere una nuova estensione bisogna **uscire e rientrare** (logout/login).
+On **Wayland** GNOME Shell cannot be restarted on the fly: to make it pick up
+a new extension you have to **log out and log back in**.
 
-### 4. Attiva l'estensione
+### 4. Enable the extension
 
 ```sh
 gnome-extensions enable deskicons@euschi.github.io
 ```
 
-oppure dall'app **Estensioni** (`gnome-extensions-app`) attivando
+or from the **Extensions** app (`gnome-extensions-app`) by enabling
 *Icone Desktop*.
 
-### Installazione alternativa da pacchetto zip
+### Alternative installation from a zip package
 
-Se preferisci una copia indipendente dal repository (niente symlink):
+If you prefer a copy independent of the repository (no symlink):
 
 ```sh
-make zip                                   # crea dist/deskicons@euschi.github.io.shell-extension.zip
+make zip                                   # creates dist/deskicons@euschi.github.io.shell-extension.zip
 gnome-extensions install --force dist/deskicons@euschi.github.io.shell-extension.zip
 glib-compile-schemas ~/.local/share/gnome-shell/extensions/deskicons@euschi.github.io/schemas
 install -Dm644 launcher/deskicons-settings.desktop ~/.local/share/applications/deskicons-settings.desktop
-# logout/login, poi
+# log out/in, then
 gnome-extensions enable deskicons@euschi.github.io
 ```
 
 ---
 
-## Primo avvio e verifica
+## First run and verification
 
-Dopo l'attivazione dovresti vedere:
-- le icone della Scrivania nell'angolo in alto a sinistra (di default);
-- un'icona a forma di schermo nel pannello in alto a destra (l'indicatore).
+Once enabled you should see:
+- the Desktop icons in the top-left corner (by default);
+- a screen-shaped icon in the top-right of the panel (the indicator).
 
-Per controllare lo stato:
+To check the status:
 
 ```sh
-gnome-extensions info deskicons@euschi.github.io   # deve dire "Stato: ACTIVE"
-pgrep -af deskicons                                # processo helper "gjs -m …/app/main.js"
+gnome-extensions info deskicons@euschi.github.io   # should report state ACTIVE
+pgrep -af deskicons                                # helper process "gjs -m …/app/main.js"
 ```
 
-Se qualcosa non va, guarda la sezione
-[Risoluzione dei problemi](#risoluzione-dei-problemi).
+If something is wrong, see [Troubleshooting](#troubleshooting).
 
 ---
 
-## Guida all'uso
+## Usage
 
 ### Mouse
 
-| Azione | Risultato |
+| Action | Result |
 | --- | --- |
-| Click su icona | seleziona solo quell'icona |
-| Ctrl + click | aggiunge/toglie l'icona dalla selezione |
-| Shift + click | seleziona tutte le icone nel rettangolo tra l'ultima cliccata e questa |
-| Trascina sullo sfondo | rettangolo di selezione (con Ctrl/Shift si aggiunge alla selezione) |
-| Click sullo sfondo | deseleziona tutto |
-| Doppio click (o singolo, vedi impostazioni) | apre file/cartella, avvia lanciatore |
-| Trascina icone | sposta la selezione mantenendo le distanze tra le icone |
-| Trascina su cartella / Cestino | sposta dentro la cartella / cestina |
-| Trascina su un'altra finestra (es. Nautilus) | copia o sposta lì i file |
-| Trascina da Nautilus al desktop | i file arrivano nel punto di rilascio |
-| Tasto destro | menù contestuale (sfondo o icone) |
+| Click on icon | selects only that icon |
+| Ctrl + click | adds/removes the icon from the selection |
+| Shift + click | selects all icons in the rectangle between the last clicked one and this one |
+| Drag on the background | rubber-band selection (with Ctrl/Shift it adds to the selection) |
+| Click on the background | deselects everything |
+| Double click (or single, see settings) | opens file/folder, runs launcher |
+| Drag icons | moves the selection keeping the distances between icons |
+| Drag onto folder / Trash | moves into the folder / trashes |
+| Drag onto another window (e.g. Nautilus) | copies or moves the files there |
+| Drag from Nautilus to the desktop | files land at the drop point |
+| Right click | context menu (background or icons) |
 
-Durante il trascinamento, come in Nautilus: **Ctrl** forza la copia,
-**Shift** forza lo spostamento.
+While dragging, as in Nautilus: **Ctrl** forces copy, **Shift** forces move.
 
-### Tastiera
+### Keyboard
 
-Funziona quando il desktop ha il focus (dopo averci cliccato).
+Works when the desktop has focus (after clicking on it).
 
-| Tasti | Azione |
+| Keys | Action |
 | --- | --- |
-| Frecce | sposta la selezione all'icona vicina (con Shift estende la selezione) |
-| Invio | apri |
-| F2 | rinomina |
-| Canc | sposta nel cestino |
-| Shift + Canc | elimina definitivamente (con conferma) |
-| Ctrl + A | seleziona tutto |
-| Ctrl + C / Ctrl + X / Ctrl + V | copia / taglia / incolla |
-| Ctrl + Z / Ctrl + Shift + Z (o Ctrl + Y) | annulla / ripeti |
-| Ctrl + Shift + N | nuova cartella |
-| Menu oppure Shift + F10 | apre il menù contestuale |
-| Esc | annulla la selezione e lo stato "taglia" |
+| Arrows | moves the selection to the nearby icon (with Shift extends the selection) |
+| Enter | open |
+| F2 | rename |
+| Delete | move to trash |
+| Shift + Delete | delete permanently (with confirmation) |
+| Ctrl + A | select all |
+| Ctrl + C / Ctrl + X / Ctrl + V | copy / cut / paste |
+| Ctrl + Z / Ctrl + Shift + Z (or Ctrl + Y) | undo / redo |
+| Ctrl + Shift + N | new folder |
+| Menu or Shift + F10 | opens the context menu |
+| Esc | clears the selection and the "cut" state |
 
-### Nuove icone e ordinamento
+### New icons and sorting
 
-- Un file nuovo (scaricato, creato da terminale, incollato…) viene messo nella
-  **prima cella libera** partendo dall'angolo scelto nelle impostazioni,
-  riempiendo prima le colonne o prima le righe.
-- Se crei/incolli/rilasci qualcosa in un punto preciso (tasto destro → Nuova
-  cartella, Incolla, drag da Nautilus), l'icona compare **lì**.
-- **Disponi icone** riordina tutto una volta secondo il criterio scelto
-  (nome, data, tipo, dimensione); poi puoi di nuovo spostarle a mano.
-- **Mantieni ordinate** tiene le icone sempre ordinate: in questa modalità le
-  icone non si possono spostare a mano (ma il drop su cartelle funziona).
+- A new file (downloaded, created from a terminal, pasted…) is placed in the
+  **first free cell** starting from the corner chosen in the settings,
+  filling columns first or rows first.
+- If you create/paste/drop something at a specific spot (right click → New
+  folder, Paste, drag from Nautilus), the icon appears **there**.
+- **Arrange icons** sorts everything once by the chosen criterion (name,
+  date, type, size); afterwards you can move them by hand again.
+- **Keep arranged** keeps the icons always sorted: in this mode icons cannot
+  be moved by hand (but dropping onto folders still works).
 
-### Lanciatori `.desktop`
+### `.desktop` launchers
 
-Un file `.desktop` copiato sulla Scrivania non viene eseguito finché non è
-**attendibile**. Puoi renderlo tale con tasto destro → **Consenti avvio**,
-oppure al primo avvio confermando il dialogo. Questo imposta il permesso di
-esecuzione e il metadato `metadata::trusted` (lo stesso usato da DING).
-Nelle impostazioni puoi scegliere di avviarli sempre senza chiedere.
+A `.desktop` file copied to the Desktop is not executed until it is
+**trusted**. You can trust it with right click → **Allow launching**, or by
+confirming the dialog on first launch. This sets the executable permission
+and the `metadata::trusted` attribute (the same one used by DING). In the
+settings you can choose to always launch them without asking.
 
-### Indicatore nel pannello
+### Panel indicator
 
-L'icona in alto a destra offre: **Mostra icone** (nasconde/mostra tutto),
-**Mantieni ordinate**, **Disponi icone**, **Ordina per**, **Nuova cartella**,
-**Apri Scrivania in File**, **Ricarica** (riavvia l'helper) e
-**Impostazioni…**. Si può nascondere dalle impostazioni.
+The icon in the top-right offers: **Show icons** (hides/shows everything),
+**Keep arranged**, **Arrange icons**, **Sort by**, **New folder**,
+**Open Desktop in Files**, **Reload** (restarts the helper) and
+**Settings…**. It can be hidden from the settings.
 
 ---
 
-## Impostazioni
+## Settings
 
-Apri l'app in uno di questi modi:
-- menù applicazioni → **Icone Desktop**;
-- indicatore nel pannello → **Impostazioni…**;
-- tasto destro sul desktop → **Impostazioni icone…**;
+Open the app in one of these ways:
+- applications menu → **Icone Desktop**;
+- panel indicator → **Settings…**;
+- right click on the desktop → **Icon settings…**;
 - `gnome-extensions prefs deskicons@euschi.github.io`.
 
-Ogni modifica si applica **subito**, senza riavvii.
+Every change is applied **immediately**, without restarting.
 
-| Pagina | Opzione | Default | Descrizione |
+| Page | Option | Default | Description |
 | --- | --- | --- | --- |
-| Aspetto | Dimensione icone | 64 px | da 32 a 128 |
-| | Spaziatura | 8 px | spazio tra una cella e l'altra |
-| | Mostra anteprime | sì | miniature di immagini/video/documenti |
-| | Righe massime | 2 | righe del nome sotto l'icona (1–4) |
-| | Stile etichette | Ombra | Ombra, Sfondo scuro o Nessuno |
-| Disposizione | Angolo di partenza | in alto a sinistra | dove compaiono le nuove icone |
-| | Direzione di riempimento | colonne | prima in verticale o in orizzontale |
-| | Monitor | tutti | tutti i monitor o solo il principale |
-| | Allinea alla griglia | sì | se no, le icone restano esattamente dove le rilasci |
-| | Mantieni ordinate | no | ordinamento automatico permanente |
-| | Ordina per / inverso / cartelle prima | nome / no / sì | criterio per "Disponi" e "Mantieni ordinate" |
-| | Margini | 12 px | spazio libero ai quattro bordi |
-| Comportamento | Apri gli elementi con | doppio click | oppure click singolo |
-| | Lanciatori non attendibili | chiedi conferma | oppure avvia sempre |
-| | Terminale | automatico | comando personalizzato, es. `kitty` (la cartella è passata come directory di lavoro) |
-| | Conferma prima del cestino | no | dialogo prima di cestinare |
-| | Indicatore nel pannello | sì | mostra/nasconde l'icona nel pannello |
-| | Mostra icone sul desktop | sì | come il toggle dell'indicatore |
-| | Ripristina predefiniti | — | riporta tutto ai valori iniziali |
-| Elementi | Home, Cestino, Unità montate, Unità di rete | no, sì, sì, no | elementi speciali |
-| | Mostra file nascosti | no | file che iniziano con `.` e file di backup `~` |
+| Appearance | Icon size | 64 px | from 32 to 128 |
+| | Spacing | 8 px | space between cells |
+| | Show thumbnails | yes | thumbnails of images/videos/documents |
+| | Max lines | 2 | lines of the name below the icon (1–4) |
+| | Label style | Shadow | Shadow, Dark background or None |
+| Layout | Start corner | top left | where new icons appear |
+| | Fill direction | columns | vertical first or horizontal first |
+| | Monitors | all | all monitors or only the primary one |
+| | Align to grid | yes | if off, icons stay exactly where you drop them |
+| | Keep arranged | no | permanent automatic sorting |
+| | Sort by / reversed / folders first | name / no / yes | criterion for "Arrange" and "Keep arranged" |
+| | Margins | 12 px | free space at the four edges |
+| Behaviour | Open items with | double click | or single click |
+| | Untrusted launchers | ask for confirmation | or always launch |
+| | Terminal | automatic | custom command, e.g. `kitty` (the folder is passed as working directory) |
+| | Confirm before trashing | no | dialog before moving to trash |
+| | Panel indicator | yes | shows/hides the panel icon |
+| | Show icons on the desktop | yes | same as the indicator toggle |
+| | Reset to defaults | — | restores all initial values |
+| Items | Home, Trash, Mounted drives, Network drives | no, yes, yes, no | special items |
+| | Show hidden files | no | files starting with `.` and `~` backup files |
 
-Le impostazioni sono normali GSettings e si possono gestire anche da terminale:
+Settings are regular GSettings and can also be managed from the terminal:
 
 ```sh
 SCHEMA=org.gnome.shell.extensions.deskicons
@@ -287,140 +284,139 @@ gsettings --schemadir $DIR list-recursively $SCHEMA
 gsettings --schemadir $DIR set $SCHEMA icon-size 80
 ```
 
-Le posizioni delle icone sono salvate in
-`~/.local/share/deskicons/positions.json` (cancellalo per ripartire da zero).
+Icon positions are saved in `~/.local/share/deskicons/positions.json`
+(delete it to start from scratch).
 
 ---
 
-## Aggiornamento e disinstallazione
+## Updating and uninstalling
 
-**Aggiornare** (installazione con `make install`):
+**Updating** (installation via `make install`):
 
 ```sh
-cd ~/Documenti/my_code/estensione_desktop
+cd gnome_desktop_extension
 git pull
 make schemas
 ```
 
-- Modifiche al solo helper (`extension/app/`): basta **Ricarica**
-  dall'indicatore.
-- Modifiche a `extension.js`, `lib/`, `prefs.js` o `metadata.json`: serve un
-  logout/login.
+- Changes to the helper only (`extension/app/`): just use **Reload** from the
+  indicator.
+- Changes to `extension.js`, `lib/`, `prefs.js` or `metadata.json`: a log
+  out/in is required.
 
-**Disinstallare:**
+**Uninstalling:**
 
 ```sh
 make uninstall
-rm -rf ~/.local/share/deskicons          # posizioni salvate (opzionale)
+rm -rf ~/.local/share/deskicons          # saved positions (optional)
 ```
 
 ---
 
-## Come funziona (architettura)
+## How it works (architecture)
 
-GNOME su Wayland non permette a un'app normale di disegnare "sotto" le
-finestre, quindi il progetto è diviso in due processi (lo stesso approccio di
-DING):
+GNOME on Wayland does not allow a regular app to draw "below" the windows,
+so the project is split into two processes (the same approach as DING):
 
 ```
 ┌───────────────────────── GNOME Shell ─────────────────────────┐
 │ extension.js                                                   │
 │  ├─ DesktopManager (lib/desktopManager.js)                     │
-│  │   • avvia l'helper con Meta.WaylandClient.new_subprocess    │
-│  │   • riconosce le sue finestre (owns_window + titolo         │
-│  │     "@deskicons:<monitor>") e le rende tipo DESKTOP:        │
-│  │     sotto tutto, su tutti i workspace, fuori da Alt-Tab     │
-│  │   • le posiziona sull'area di lavoro di ogni monitor        │
-│  │   • riavvia l'helper se termina in modo anomalo             │
-│  └─ Indicatore (lib/indicator.js) ──── D-Bus org.gtk.Actions ─┐│
+│  │   • spawns the helper with Meta.WaylandClient.new_subprocess│
+│  │   • recognizes its windows (owns_window + title             │
+│  │     "@deskicons:<monitor>") and makes them DESKTOP type:    │
+│  │     below everything, on all workspaces, out of Alt-Tab     │
+│  │   • places them on the work area of each monitor            │
+│  │   • restarts the helper if it exits abnormally              │
+│  └─ Indicator (lib/indicator.js) ───── D-Bus org.gtk.Actions ─┐│
 └────────────────────────────────────────────────────────────────┘│
                                                                   ▼
-┌──────────────── Helper GTK4 / libadwaita (gjs) ────────────────┐
+┌──────────────── GTK4 / libadwaita helper (gjs) ────────────────┐
 │ app/main.js            Adw.Application "it.eugenio.DeskIcons"  │
-│ app/desktopController  selezione, DnD, menù, azioni            │
-│ app/desktopWindow      una finestra trasparente per monitor    │
-│ app/desktopModel       file della Scrivania + Gio monitor      │
-│ app/layout, positions  griglia, posizionamento, persistenza    │
+│ app/desktopController  selection, DnD, menus, actions          │
+│ app/desktopWindow      one transparent window per monitor      │
+│ app/desktopModel       Desktop files + Gio monitor             │
+│ app/layout, positions  grid, placement, persistence            │
 │ app/fileOps            org.gnome.Nautilus.FileOperations2      │
 └────────────────────────────────────────────────────────────────┘
 ```
 
-- La configurazione è condivisa tramite **GSettings**
-  (`org.gnome.shell.extensions.deskicons`); l'helper carica lo schema dalla
-  cartella dell'estensione e reagisce ai cambiamenti in tempo reale.
-- Il drag & drop usa il formato standard `text/uri-list`, quindi funziona con
-  qualunque file manager o app che accetti file.
-- Gli appunti usano `x-special/gnome-copied-files` (lo stesso di Nautilus) per
-  distinguere copia e taglia.
-- Disattivando l'estensione l'helper riceve SIGTERM e termina; non restano
-  processi orfani.
+- Configuration is shared through **GSettings**
+  (`org.gnome.shell.extensions.deskicons`); the helper loads the schema from
+  the extension folder and reacts to changes in real time.
+- Drag & drop uses the standard `text/uri-list` format, so it works with any
+  file manager or app that accepts files.
+- The clipboard uses `x-special/gnome-copied-files` (the same as Nautilus) to
+  tell copy and cut apart.
+- When the extension is disabled the helper receives SIGTERM and exits; no
+  orphan processes are left behind.
 
 ---
 
-## Struttura del progetto
+## Project structure
 
 ```
-estensione_desktop/
+gnome_desktop_extension/
 ├── Makefile                   # schemas, install, uninstall, zip, debug
 ├── launcher/
-│   └── deskicons-settings.desktop   # voce "Icone Desktop" nel menù app
-└── extension/                 # = cartella installata dell'estensione
+│   └── deskicons-settings.desktop   # "Icone Desktop" entry in the app menu
+└── extension/                 # = the installed extension folder
     ├── metadata.json
-    ├── extension.js           # entry point nella Shell
-    ├── prefs.js               # app impostazioni (libadwaita)
+    ├── extension.js           # entry point in the Shell
+    ├── prefs.js               # settings app (libadwaita)
     ├── lib/
-    │   ├── desktopManager.js  # gestione processo helper e finestre
-    │   └── indicator.js       # indicatore nel pannello
+    │   ├── desktopManager.js  # helper process and window management
+    │   └── indicator.js       # panel indicator
     ├── schemas/
     │   └── org.gnome.shell.extensions.deskicons.gschema.xml
-    └── app/                   # helper GTK4
-        ├── main.js            # avvio, argomenti, GSettings
+    └── app/                   # GTK4 helper
+        ├── main.js            # startup, arguments, GSettings
         ├── desktopController.js
         ├── desktopWindow.js
         ├── desktopModel.js
-        ├── fileItem.js        # widget dell'icona
-        ├── layout.js          # griglia e algoritmi di posizionamento
-        ├── positions.js       # salvataggio posizioni
-        ├── menus.js           # menù contestuali
-        ├── fileOps.js         # operazioni file (Nautilus / Gio)
-        ├── clipboard.js       # appunti compatibili Nautilus
-        ├── thumbnails.js      # anteprime (GnomeDesktop)
+        ├── fileItem.js        # icon widget
+        ├── layout.js          # grid and placement algorithms
+        ├── positions.js       # position persistence
+        ├── menus.js           # context menus
+        ├── fileOps.js         # file operations (Nautilus / Gio)
+        ├── clipboard.js       # Nautilus-compatible clipboard
+        ├── thumbnails.js      # thumbnails (GnomeDesktop)
         ├── utils.js
         └── style.css
 ```
 
 ---
 
-## Sviluppo e debug
+## Development and debugging
 
 ```sh
 make debug
 ```
-Avvia l'helper in una **finestra normale** (senza la Shell), utile per
-lavorare su griglia, menù e interazioni senza fare logout.
+Runs the helper in a **regular window** (without the Shell), handy for
+working on the grid, menus and interactions without logging out.
 
-**Lint** (configurazione in `eslint.config.mjs`, esclusa dallo zip):
+**Lint** (configuration in `eslint.config.mjs`, excluded from the zip):
 
 ```sh
-npm i -g eslint @eslint/js      # una tantum
+npm i -g eslint @eslint/js      # once
 make lint
 ```
 
-**Log:**
+**Logs:**
 
 ```sh
-journalctl -f -o cat /usr/bin/gnome-shell     # Shell + helper (messaggi "DeskIcons")
+journalctl -f -o cat /usr/bin/gnome-shell     # Shell + helper ("DeskIcons" messages)
 ```
 
-**Ciclo di sviluppo:**
-- codice dell'helper → *Ricarica* dall'indicatore (oppure
+**Development loop:**
+- helper code → *Reload* from the indicator (or
   `gnome-extensions disable … && gnome-extensions enable …`);
-- codice della Shell → logout/login;
-- schema GSettings modificato → `make schemas`.
+- Shell code → log out/in;
+- GSettings schema changed → `make schemas`.
 
-**Test in una Shell isolata (senza logout):** si può avviare una Shell
-headless in una sessione D-Bus privata, con configurazione e dati in una
-cartella temporanea:
+**Testing in an isolated Shell (no logout):** you can run a headless Shell
+in a private D-Bus session, with configuration and data in a temporary
+folder:
 
 ```sh
 export GSETTINGS_BACKEND=keyfile XDG_CONFIG_HOME=/tmp/t/config XDG_DATA_HOME=/tmp/t/data
@@ -433,62 +429,67 @@ dbus-run-session -- sh -c '
 
 ---
 
-## Risoluzione dei problemi
+## Troubleshooting
 
-**Non vedo nessuna icona**
-- `gnome-extensions info deskicons@euschi.github.io`: se lo stato è `ERROR`,
-  leggi il motivo con `journalctl -b -o cat /usr/bin/gnome-shell | grep -i deskicons`.
-- Hai fatto logout/login dopo `make install`?
-- Controlla di non avere *Mostra icone* disattivato (indicatore nel pannello).
-- Verifica che un'altra estensione di icone desktop non sia attiva.
+**I don't see any icons**
+- `gnome-extensions info deskicons@euschi.github.io`: if the state is `ERROR`,
+  read the reason with `journalctl -b -o cat /usr/bin/gnome-shell | grep -i deskicons`.
+- Did you log out/in after `make install`?
+- Make sure *Show icons* is not turned off (panel indicator).
+- Check that no other desktop icons extension is enabled.
 
-**"schema … non trovato"**
-- Esegui `make schemas` (o `make install`) nella cartella del progetto.
+**`gnome-extensions enable` says the extension does not exist**
+- The folder (or symlink) in `~/.local/share/gnome-shell/extensions/` must be
+  named exactly like the `uuid` in `metadata.json`. Run `make install` again,
+  then log out/in.
 
-**L'helper si chiude continuamente**
-- Dopo 5 crash in un minuto non viene più riavviato. Avvialo a mano per
-  vedere l'errore: `make debug`. Poi *Ricarica* dall'indicatore.
+**"schema … not found"**
+- Run `make schemas` (or `make install`) in the project folder.
 
-**Copia/sposta/cestino non mostrano avanzamento né annulla**
-- Nautilus non è installato o non risponde su D-Bus: viene usato il ripiego
-  interno (Gio). Installa `nautilus`.
+**The helper keeps crashing**
+- After 5 crashes within a minute it is no longer restarted. Run it by hand
+  to see the error: `make debug`. Then *Reload* from the indicator.
 
-**"Apri nel terminale" non fa nulla**
-- Nessun terminale riconosciuto (ptyxis, kgx, gnome-terminal, kitty,
-  alacritty, foot, konsole, xterm). Imposta il comando nelle impostazioni.
+**Copy/move/trash show no progress or undo**
+- Nautilus is not installed or does not respond on D-Bus: the internal
+  fallback (Gio) is used. Install `nautilus`.
 
-**Le icone sono finite in posizioni strane dopo aver cambiato monitor**
-- Tasto destro → *Disponi icone*, oppure cancella
+**"Open in terminal" does nothing**
+- No known terminal found (ptyxis, kgx, gnome-terminal, kitty, alacritty,
+  foot, konsole, xterm). Set the command in the settings.
+
+**Icons ended up in odd places after changing monitors**
+- Right click → *Arrange icons*, or delete
   `~/.local/share/deskicons/positions.json`.
 
 ---
 
-## Pubblicazione su extensions.gnome.org
+## Publishing on extensions.gnome.org
 
 1. `make zip` → `dist/deskicons@euschi.github.io.shell-extension.zip`.
-2. Controllo statico consigliato da EGO:
+2. Static check recommended by EGO:
    ```sh
    python -m venv venv && . venv/bin/activate && pip install -U shexli
    shexli dist/deskicons@euschi.github.io.shell-extension.zip
    ```
-   Due segnalazioni sono attese e non sono errori reali:
-   - `EGO-P-007`: i file in `app/` non sono importati da `extension.js`
-     perché sono l'helper avviato come processo separato;
-   - `EGO-M-004` su `"51"`: le versioni di Shexli che non conoscono ancora
-     GNOME 51 la considerano una versione futura.
-3. Carica lo zip su <https://extensions.gnome.org/upload/>. Nelle note per il
-   revisore conviene spiegare che `app/` è un helper GJS/GTK4 avviato con
-   `Meta.WaylandClient` (stesso approccio di DING).
+   Two warnings are expected and are not real errors:
+   - `EGO-P-007`: the files in `app/` are not imported by `extension.js`
+     because they are the helper launched as a separate process;
+   - `EGO-M-004` on `"51"`: Shexli versions that don't know GNOME 51 yet
+     consider it a future version.
+3. Upload the zip at <https://extensions.gnome.org/upload/>. In the notes for
+   the reviewer, explain that `app/` is a GJS/GTK4 helper launched with
+   `Meta.WaylandClient` (same approach as DING).
 
-Lo schema GSettings viene distribuito solo come XML: la Shell lo compila
-automaticamente quando installa l'estensione da extensions.gnome.org.
+The GSettings schema is shipped as XML only: the Shell compiles it
+automatically when installing the extension from extensions.gnome.org.
 
-## Limitazioni note
+## Known limitations
 
-- Solo **GNOME Shell 51** su Wayland (dichiarato in `metadata.json`); in
-  sessioni X11 `Meta.WaylandClient` non è disponibile.
-- Su Wayland l'installazione e gli aggiornamenti del codice della Shell
-  richiedono logout/login.
-- La rinomina usa un piccolo popover sotto l'icona (non la modifica
-  direttamente nell'etichetta).
-- Con *Mantieni ordinate* attivo le icone non si spostano a mano.
+- Only **GNOME Shell 51** on Wayland (declared in `metadata.json`); in X11
+  sessions `Meta.WaylandClient` is not available.
+- On Wayland, installation and updates to the Shell code require a log
+  out/in.
+- Renaming uses a small popover below the icon (not in-place editing of the
+  label).
+- With *Keep arranged* enabled, icons cannot be moved by hand.
