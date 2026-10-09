@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+// SPDX-FileCopyrightText: 2026 Eugenio Schintu
+
 // Finestra trasparente che copre l'area di lavoro di un monitor. La Shell la
 // riconosce dal titolo "@deskicons:<monitor>" e la rende finestra desktop.
 

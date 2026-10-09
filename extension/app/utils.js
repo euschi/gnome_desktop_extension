@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+// SPDX-FileCopyrightText: 2026 Eugenio Schintu
+
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
 import GioUnix from 'gi://GioUnix';

@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+// SPDX-FileCopyrightText: 2026 Eugenio Schintu
+
 // Indicatore nel pannello con le azioni rapide sulle icone del desktop.
 // Le azioni che riguardano l'helper vengono invocate tramite le GActions che
 // l'applicazione GTK esporta su D-Bus (org.gtk.Actions).

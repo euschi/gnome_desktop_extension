@@ -1,10 +1,10 @@
-UUID      := deskicons@eugenio.schintu
+UUID      := deskicons@euschi.github.io
 SRC       := $(CURDIR)/extension
 EXT_DIR   := $(HOME)/.local/share/gnome-shell/extensions/$(UUID)
 APPS_DIR  := $(HOME)/.local/share/applications
 LAUNCHER  := deskicons-settings.desktop
 
-.PHONY: all schemas install uninstall zip clean debug
+.PHONY: all schemas install uninstall zip clean debug lint
 
 all: schemas
 
@@ -31,6 +31,9 @@ zip: schemas
 # Avvia l'helper in finestra normale (senza la Shell) per sviluppo
 debug: schemas
 	gjs -m $(SRC)/app/main.js --debug --extension-dir $(SRC)
+
+lint:
+	eslint extension
 
 clean:
 	rm -rf dist $(SRC)/schemas/gschemas.compiled

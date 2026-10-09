@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+// SPDX-FileCopyrightText: 2026 Eugenio Schintu
+
 // Avvia il processo helper GTK4 come client Wayland "fidato" e trasforma le
 // sue finestre in finestre desktop: sotto tutte le altre, su tutti i
 // workspace, fuori da Alt-Tab/overview, posizionate sull'area di lavoro di

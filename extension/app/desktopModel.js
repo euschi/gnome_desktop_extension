@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+// SPDX-FileCopyrightText: 2026 Eugenio Schintu
+
 // Elenco degli elementi da mostrare sul desktop: file della cartella Scrivania
 // più gli elementi speciali (Home, Cestino, unità montate). Tiene tutto
 // aggiornato con Gio.FileMonitor / Gio.VolumeMonitor.

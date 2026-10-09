@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+// SPDX-FileCopyrightText: 2026 Eugenio Schintu
+
 // Modelli dei menù contestuali. Le voci puntano alle azioni del gruppo "desk"
 // registrato dal DesktopController su ogni finestra.
 

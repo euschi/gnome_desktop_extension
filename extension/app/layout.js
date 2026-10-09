@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+// SPDX-FileCopyrightText: 2026 Eugenio Schintu
+
 // Geometria della griglia di un monitor e algoritmo di posizionamento delle
 // icone (posizioni salvate, nuove icone, "mantieni ordinate").
 
@@ -113,7 +116,7 @@ export function sortItems(items, settings) {
         }
         if (foldersFirst && a.isDir !== b.isDir)
             return a.isDir ? -1 : 1;
-        let res = cmp(a, b) || collator.compare(a.displayName, b.displayName);
+        const res = cmp(a, b) || collator.compare(a.displayName, b.displayName);
         return reverse ? -res : res;
     });
 }

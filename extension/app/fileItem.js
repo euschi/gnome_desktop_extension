@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+// SPDX-FileCopyrightText: 2026 Eugenio Schintu
+
 // Widget di una singola icona: immagine (icona o miniatura), emblemi ed
 // etichetta. Il drag delle icone parte da qui; selezione e azioni sono
 // gestite dal DesktopController.
@@ -53,10 +56,8 @@ class FileItem extends Gtk.Box {
             this._dragY = Math.round(y);
             return controller.onDragPrepare(this, x, y);
         });
-        drag.connect('drag-begin', (source, gdkDrag) => {
-            source.set_icon(Gtk.WidgetPaintable.new(this), this._dragX, this._dragY);
-            controller.onDragBegin(this, gdkDrag);
-        });
+        drag.connect('drag-begin', source =>
+            source.set_icon(Gtk.WidgetPaintable.new(this), this._dragX, this._dragY));
         drag.connect('drag-end', () => controller.onDragEnd(this));
         this.add_controller(drag);
 

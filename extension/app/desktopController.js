@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+// SPDX-FileCopyrightText: 2026 Eugenio Schintu
+
 // Coordina modello, finestre, selezione, drag & drop, menù e azioni.
 
 import GLib from 'gi://GLib';
@@ -19,7 +22,7 @@ import * as Menus from './menus.js';
 import {launchContext, openTerminal, parseUriList, readStreamToString, spawn,
     uniqueName, uriListProvider} from './utils.js';
 
-const UUID = 'deskicons@eugenio.schintu';
+const UUID = 'deskicons@euschi.github.io';
 const MENU_POINT_TTL_US = 30 * GLib.USEC_PER_SEC;
 
 const APPEARANCE_KEYS = ['icon-size', 'label-lines', 'item-spacing', 'show-thumbnails'];
@@ -533,9 +536,6 @@ export class DesktopController {
         const files = this._selectedItems().filter(i => i.kind !== 'trash').map(i => i.file);
         this._drag = {primary: id, offsetX: x, offsetY: y, ids: [...this._selection], files};
         return uriListProvider(files);
-    }
-
-    onDragBegin() {
     }
 
     onDragEnd() {

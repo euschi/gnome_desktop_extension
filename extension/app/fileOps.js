@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+// SPDX-FileCopyrightText: 2026 Eugenio Schintu
+
 // Operazioni sui file delegate a Nautilus (org.gnome.Nautilus.FileOperations2)
 // così da avere finestre di avanzamento, gestione conflitti e annulla/ripeti
 // condivisi con il file manager. Se Nautilus non è disponibile si usa Gio.

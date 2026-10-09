@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+// SPDX-FileCopyrightText: 2026 Eugenio Schintu
+
 // Persistenza delle posizioni delle icone in un file JSON.
 // Le posizioni sono in coordinate di griglia (anche frazionarie quando
 // l'allineamento alla griglia è disattivato) per restare coerenti quando

@@ -6,9 +6,10 @@ tutto quello che ci si aspetta da un desktop "classico": selezione multipla,
 spostamento libero delle icone, drag & drop con Nautilus, menù contestuali,
 un indicatore nel pannello e un'app per personalizzare ogni aspetto.
 
-- **UUID:** `deskicons@eugenio.schintu`
+- **UUID:** `deskicons@euschi.github.io`
 - **GNOME Shell supportata:** 51 (sessione **Wayland**)
-- **Licenza / repository:** <https://github.com/euschi/gnome_desktop_extension>
+- **Licenza:** GPL-2.0-or-later (vedi [`LICENSE`](LICENSE))
+- **Repository:** <https://github.com/euschi/gnome_desktop_extension>
 
 ---
 
@@ -25,7 +26,8 @@ un indicatore nel pannello e un'app per personalizzare ogni aspetto.
 9. [Struttura del progetto](#struttura-del-progetto)
 10. [Sviluppo e debug](#sviluppo-e-debug)
 11. [Risoluzione dei problemi](#risoluzione-dei-problemi)
-12. [Limitazioni note](#limitazioni-note)
+12. [Pubblicazione su extensions.gnome.org](#pubblicazione-su-extensionsgnomeorg)
+13. [Limitazioni note](#limitazioni-note)
 
 ---
 
@@ -122,7 +124,7 @@ make install
 Il comando:
 1. compila lo schema delle impostazioni (`extension/schemas/gschemas.compiled`);
 2. crea il **collegamento simbolico**
-   `~/.local/share/gnome-shell/extensions/deskicons@eugenio.schintu → extension/`
+   `~/.local/share/gnome-shell/extensions/deskicons@euschi.github.io → extension/`
    (così ogni modifica al codice è subito "installata");
 3. copia il lanciatore delle impostazioni in
    `~/.local/share/applications/deskicons-settings.desktop`.
@@ -135,7 +137,7 @@ riconoscere una nuova estensione bisogna **uscire e rientrare** (logout/login).
 ### 4. Attiva l'estensione
 
 ```sh
-gnome-extensions enable deskicons@eugenio.schintu
+gnome-extensions enable deskicons@euschi.github.io
 ```
 
 oppure dall'app **Estensioni** (`gnome-extensions-app`) attivando
@@ -146,12 +148,12 @@ oppure dall'app **Estensioni** (`gnome-extensions-app`) attivando
 Se preferisci una copia indipendente dal repository (niente symlink):
 
 ```sh
-make zip                                   # crea dist/deskicons@eugenio.schintu.shell-extension.zip
-gnome-extensions install --force dist/deskicons@eugenio.schintu.shell-extension.zip
-glib-compile-schemas ~/.local/share/gnome-shell/extensions/deskicons@eugenio.schintu/schemas
+make zip                                   # crea dist/deskicons@euschi.github.io.shell-extension.zip
+gnome-extensions install --force dist/deskicons@euschi.github.io.shell-extension.zip
+glib-compile-schemas ~/.local/share/gnome-shell/extensions/deskicons@euschi.github.io/schemas
 install -Dm644 launcher/deskicons-settings.desktop ~/.local/share/applications/deskicons-settings.desktop
 # logout/login, poi
-gnome-extensions enable deskicons@eugenio.schintu
+gnome-extensions enable deskicons@euschi.github.io
 ```
 
 ---
@@ -165,7 +167,7 @@ Dopo l'attivazione dovresti vedere:
 Per controllare lo stato:
 
 ```sh
-gnome-extensions info deskicons@eugenio.schintu   # deve dire "Stato: ACTIVE"
+gnome-extensions info deskicons@euschi.github.io   # deve dire "Stato: ACTIVE"
 pgrep -af deskicons                                # processo helper "gjs -m …/app/main.js"
 ```
 
@@ -248,7 +250,7 @@ Apri l'app in uno di questi modi:
 - menù applicazioni → **Icone Desktop**;
 - indicatore nel pannello → **Impostazioni…**;
 - tasto destro sul desktop → **Impostazioni icone…**;
-- `gnome-extensions prefs deskicons@eugenio.schintu`.
+- `gnome-extensions prefs deskicons@euschi.github.io`.
 
 Ogni modifica si applica **subito**, senza riavvii.
 
@@ -280,7 +282,7 @@ Le impostazioni sono normali GSettings e si possono gestire anche da terminale:
 
 ```sh
 SCHEMA=org.gnome.shell.extensions.deskicons
-DIR=~/.local/share/gnome-shell/extensions/deskicons@eugenio.schintu/schemas
+DIR=~/.local/share/gnome-shell/extensions/deskicons@euschi.github.io/schemas
 gsettings --schemadir $DIR list-recursively $SCHEMA
 gsettings --schemadir $DIR set $SCHEMA icon-size 80
 ```
@@ -397,10 +399,12 @@ make debug
 Avvia l'helper in una **finestra normale** (senza la Shell), utile per
 lavorare su griglia, menù e interazioni senza fare logout.
 
+**Lint** (configurazione in `eslint.config.mjs`, esclusa dallo zip):
+
 ```sh
-gjs -m extension/app/main.js --snapshot /tmp/desk.png --extension-dir extension
+npm i -g eslint @eslint/js      # una tantum
+make lint
 ```
-Salva un PNG della finestra dopo ~2,5 s e termina (verifica visiva rapida).
 
 **Log:**
 
@@ -421,9 +425,9 @@ cartella temporanea:
 ```sh
 export GSETTINGS_BACKEND=keyfile XDG_CONFIG_HOME=/tmp/t/config XDG_DATA_HOME=/tmp/t/data
 mkdir -p $XDG_DATA_HOME/gnome-shell/extensions
-ln -s $PWD/extension $XDG_DATA_HOME/gnome-shell/extensions/deskicons@eugenio.schintu
+ln -s $PWD/extension $XDG_DATA_HOME/gnome-shell/extensions/deskicons@euschi.github.io
 dbus-run-session -- sh -c '
-  gsettings set org.gnome.shell enabled-extensions "[\"deskicons@eugenio.schintu\"]"
+  gsettings set org.gnome.shell enabled-extensions "[\"deskicons@euschi.github.io\"]"
   gnome-shell --headless --wayland --no-x11 --virtual-monitor 1600x900'
 ```
 
@@ -432,7 +436,7 @@ dbus-run-session -- sh -c '
 ## Risoluzione dei problemi
 
 **Non vedo nessuna icona**
-- `gnome-extensions info deskicons@eugenio.schintu`: se lo stato è `ERROR`,
+- `gnome-extensions info deskicons@euschi.github.io`: se lo stato è `ERROR`,
   leggi il motivo con `journalctl -b -o cat /usr/bin/gnome-shell | grep -i deskicons`.
 - Hai fatto logout/login dopo `make install`?
 - Controlla di non avere *Mostra icone* disattivato (indicatore nel pannello).
@@ -458,6 +462,26 @@ dbus-run-session -- sh -c '
   `~/.local/share/deskicons/positions.json`.
 
 ---
+
+## Pubblicazione su extensions.gnome.org
+
+1. `make zip` → `dist/deskicons@euschi.github.io.shell-extension.zip`.
+2. Controllo statico consigliato da EGO:
+   ```sh
+   python -m venv venv && . venv/bin/activate && pip install -U shexli
+   shexli dist/deskicons@euschi.github.io.shell-extension.zip
+   ```
+   Due segnalazioni sono attese e non sono errori reali:
+   - `EGO-P-007`: i file in `app/` non sono importati da `extension.js`
+     perché sono l'helper avviato come processo separato;
+   - `EGO-M-004` su `"51"`: le versioni di Shexli che non conoscono ancora
+     GNOME 51 la considerano una versione futura.
+3. Carica lo zip su <https://extensions.gnome.org/upload/>. Nelle note per il
+   revisore conviene spiegare che `app/` è un helper GJS/GTK4 avviato con
+   `Meta.WaylandClient` (stesso approccio di DING).
+
+Lo schema GSettings viene distribuito solo come XML: la Shell lo compila
+automaticamente quando installa l'estensione da extensions.gnome.org.
 
 ## Limitazioni note
 

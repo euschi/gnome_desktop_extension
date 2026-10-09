@@ -1,8 +1,10 @@
 {
-  "uuid": "deskicons@eugenio.schintu",
+  "uuid": "deskicons@euschi.github.io",
   "name": "Icone Desktop",
-  "description": "Icone sul desktop con selezione multipla, drag & drop, menù contestuali e indicatore nel pannello.",
-  "shell-version": ["51"],
+  "description": "Desktop icons for GNOME on Wayland, in the style of DING.\n\n* Shows the contents of the Desktop folder, plus optional Home, Trash and mounted drives\n* Multiple selection (Ctrl/Shift click, rubber band) and free or grid-aligned positioning\n* Drag and drop between icons, folders, Trash and other applications such as Nautilus\n* Context menus on the background and on icons, plus a panel indicator\n* Preferences for icon size, labels, placement of new icons, sorting and behaviour\n\nThe desktop is drawn by a small GJS/GTK4 helper process launched by the extension.\nClipboard: the extension reads and writes the clipboard only when you copy, cut or paste files on the desktop (Nautilus-compatible format). Nothing is sent anywhere.",
+  "shell-version": [
+    "51"
+  ],
   "settings-schema": "org.gnome.shell.extensions.deskicons",
   "url": "https://github.com/euschi/gnome_desktop_extension",
   "version-name": "0.1.0"
