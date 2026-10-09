@@ -8,5 +8,5 @@
   "settings-schema": "org.gnome.shell.extensions.deskicons",
   "gettext-domain": "deskicons",
   "url": "https://github.com/euschi/gnome_desktop_extension",
-  "version-name": "0.1.0"
+  "version-name": "0.2.0"
 }
