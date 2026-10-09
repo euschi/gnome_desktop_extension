@@ -1,0 +1,9 @@
+{
+  "uuid": "deskicons@eugenio.schintu",
+  "name": "Icone Desktop",
+  "description": "Icone sul desktop con selezione multipla, drag & drop, menù contestuali e indicatore nel pannello.",
+  "shell-version": ["51"],
+  "settings-schema": "org.gnome.shell.extensions.deskicons",
+  "url": "https://github.com/euschi/gnome_desktop_extension",
+  "version-name": "0.1.0"
+}

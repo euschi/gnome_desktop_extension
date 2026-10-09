@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="deskicons">
+  <schema id="org.gnome.shell.extensions.deskicons" path="/org/gnome/shell/extensions/deskicons/">
+
+    <!-- Aspetto -->
+    <key name="icon-size" type="i">
+      <range min="32" max="128"/>
+      <default>64</default>
+      <summary>Dimensione icone (px)</summary>
+    </key>
+    <key name="label-lines" type="i">
+      <range min="1" max="4"/>
+      <default>2</default>
+      <summary>Righe massime dell'etichetta</summary>
+    </key>
+    <key name="label-style" type="s">
+      <choices>
+        <choice value="shadow"/>
+        <choice value="background"/>
+        <choice value="none"/>
+      </choices>
+      <default>'shadow'</default>
+      <summary>Stile delle etichette</summary>
+    </key>
+    <key name="item-spacing" type="i">
+      <range min="0" max="48"/>
+      <default>8</default>
+      <summary>Spaziatura tra le icone (px)</summary>
+    </key>
+    <key name="show-thumbnails" type="b">
+      <default>true</default>
+      <summary>Mostra anteprime dei file</summary>
+    </key>
+
+    <!-- Disposizione -->
+    <key name="start-corner" type="s">
+      <choices>
+        <choice value="top-left"/>
+        <choice value="top-right"/>
+        <choice value="bottom-left"/>
+        <choice value="bottom-right"/>
+      </choices>
+      <default>'top-left'</default>
+      <summary>Angolo da cui posizionare le nuove icone</summary>
+    </key>
+    <key name="fill-direction" type="s">
+      <choices>
+        <choice value="columns"/>
+        <choice value="rows"/>
+      </choices>
+      <default>'columns'</default>
+      <summary>Direzione di riempimento (prima colonne o righe)</summary>
+    </key>
+    <key name="margin-top" type="i">
+      <range min="0" max="400"/>
+      <default>12</default>
+      <summary>Margine superiore</summary>
+    </key>
+    <key name="margin-bottom" type="i">
+      <range min="0" max="400"/>
+      <default>12</default>
+      <summary>Margine inferiore</summary>
+    </key>
+    <key name="margin-left" type="i">
+      <range min="0" max="400"/>
+      <default>12</default>
+      <summary>Margine sinistro</summary>
+    </key>
+    <key name="margin-right" type="i">
+      <range min="0" max="400"/>
+      <default>12</default>
+      <summary>Margine destro</summary>
+    </key>
+    <key name="snap-to-grid" type="b">
+      <default>true</default>
+      <summary>Allinea le icone alla griglia</summary>
+    </key>
+    <key name="keep-arranged" type="b">
+      <default>false</default>
+      <summary>Mantieni le icone ordinate</summary>
+    </key>
+    <key name="sort-by" type="s">
+      <choices>
+        <choice value="name"/>
+        <choice value="modified"/>
+        <choice value="type"/>
+        <choice value="size"/>
+      </choices>
+      <default>'name'</default>
+      <summary>Criterio di ordinamento</summary>
+    </key>
+    <key name="sort-reverse" type="b">
+      <default>false</default>
+      <summary>Ordine inverso</summary>
+    </key>
+    <key name="folders-first" type="b">
+      <default>true</default>
+      <summary>Cartelle prima dei file</summary>
+    </key>
+    <key name="monitors" type="s">
+      <choices>
+        <choice value="all"/>
+        <choice value="primary"/>
+      </choices>
+      <default>'all'</default>
+      <summary>Monitor su cui mostrare le icone</summary>
+    </key>
+
+    <!-- Comportamento -->
+    <key name="icons-visible" type="b">
+      <default>true</default>
+      <summary>Icone visibili</summary>
+    </key>
+    <key name="click-policy" type="s">
+      <choices>
+        <choice value="double"/>
+        <choice value="single"/>
+      </choices>
+      <default>'double'</default>
+      <summary>Click per aprire</summary>
+    </key>
+    <key name="launcher-policy" type="s">
+      <choices>
+        <choice value="ask"/>
+        <choice value="always"/>
+      </choices>
+      <default>'ask'</default>
+      <summary>Avvio dei lanciatori .desktop non attendibili</summary>
+    </key>
+    <key name="confirm-trash" type="b">
+      <default>false</default>
+      <summary>Chiedi conferma prima di spostare nel cestino</summary>
+    </key>
+    <key name="terminal" type="s">
+      <default>''</default>
+      <summary>Comando del terminale (vuoto = automatico)</summary>
+    </key>
+    <key name="show-indicator" type="b">
+      <default>true</default>
+      <summary>Mostra indicatore nel pannello</summary>
+    </key>
+
+    <!-- Elementi -->
+    <key name="show-home" type="b">
+      <default>false</default>
+      <summary>Mostra la cartella Home</summary>
+    </key>
+    <key name="show-trash" type="b">
+      <default>true</default>
+      <summary>Mostra il Cestino</summary>
+    </key>
+    <key name="show-volumes" type="b">
+      <default>true</default>
+      <summary>Mostra le unità montate</summary>
+    </key>
+    <key name="show-network-volumes" type="b">
+      <default>false</default>
+      <summary>Mostra le unità di rete</summary>
+    </key>
+    <key name="show-hidden" type="b">
+      <default>false</default>
+      <summary>Mostra i file nascosti</summary>
+    </key>
+  </schema>
+</schemalist>

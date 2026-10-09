@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Icone Desktop
+GenericName=Impostazioni icone del desktop
+Comment=Personalizza dimensione, disposizione e comportamento delle icone sul desktop
+Exec=gnome-extensions prefs deskicons@eugenio.schintu
+Icon=user-desktop
+Categories=GNOME;GTK;Settings;DesktopSettings;
+Keywords=desktop;icone;scrivania;icons;
+StartupNotify=true

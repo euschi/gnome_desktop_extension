@@ -1,0 +1,64 @@
+/* Finestra desktop trasparente */
+window.deskicons-window,
+window.deskicons-window.background {
+    background-color: transparent;
+    box-shadow: none;
+}
+
+window.deskicons-window.debug {
+    background-color: alpha(#203040, 0.92);
+}
+
+.deskicon {
+    padding: 4px 2px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    transition: background-color 120ms ease-out;
+}
+
+.deskicon:hover {
+    background-color: alpha(white, 0.10);
+}
+
+.deskicon.selected {
+    background-color: alpha(@accent_bg_color, 0.45);
+    border-color: alpha(@accent_bg_color, 0.85);
+}
+
+.deskicon.drop-target {
+    background-color: alpha(@accent_bg_color, 0.30);
+    border-color: @accent_bg_color;
+}
+
+.deskicon.cut > overlay {
+    opacity: 0.45;
+}
+
+.deskicon > label {
+    color: white;
+    font-size: 0.92em;
+}
+
+.label-shadow .deskicon > label {
+    text-shadow: 0 1px 2px alpha(black, 0.95), 0 0 6px alpha(black, 0.65);
+}
+
+.label-background .deskicon > label {
+    background-color: alpha(black, 0.55);
+    border-radius: 6px;
+    padding: 1px 5px;
+}
+
+.deskicon.selected > label {
+    text-shadow: none;
+}
+
+.deskicon .emblem {
+    -gtk-icon-shadow: 0 1px 2px alpha(black, 0.8);
+}
+
+.rubberband {
+    background-color: alpha(@accent_bg_color, 0.22);
+    border: 1px solid @accent_bg_color;
+    border-radius: 3px;
+}
