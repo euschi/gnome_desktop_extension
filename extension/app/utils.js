@@ -71,7 +71,7 @@ export function spawn(argv, cwd = null) {
         launcher.spawnv(argv);
         return true;
     } catch (e) {
-        console.error(`DeskIcons: impossibile eseguire ${argv.join(' ')}: ${e.message}`);
+        console.error(`DeskIcons: cannot run ${argv.join(' ')}: ${e.message}`);
         return false;
     }
 }

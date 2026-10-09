@@ -8,6 +8,7 @@
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
 
+import {_} from './i18n.js';
 import {desktopDir, newDesktopAppInfo} from './utils.js';
 
 const FILE_ATTRIBUTES = [
@@ -152,7 +153,7 @@ export class DesktopModel {
             this.items = items;
             this._onChanged(this.items);
         } catch (e) {
-            console.error(`DeskIcons: errore caricamento desktop: ${e.message}`);
+            console.error(`DeskIcons: error loading desktop: ${e.message}`);
         } finally {
             this._loading = false;
             if (this._pending) {
@@ -214,7 +215,7 @@ export class DesktopModel {
             if (info) {
                 result.push(new DesktopItem({
                     id: 'home', kind: 'home', name: 'home', file, info, appInfo: null,
-                    displayName: 'Home',
+                    displayName: _('Home'),
                     gicon: Gio.ThemedIcon.new('user-home'),
                 }));
             }
@@ -226,7 +227,7 @@ export class DesktopModel {
             const full = (info?.get_attribute_uint32('trash::item-count') ?? 0) > 0;
             result.push(new DesktopItem({
                 id: 'trash', kind: 'trash', name: 'trash', file, info, appInfo: null,
-                displayName: 'Cestino',
+                displayName: _('Trash'),
                 gicon: Gio.ThemedIcon.new(full ? 'user-trash-full' : 'user-trash'),
                 trashFull: full,
             }));

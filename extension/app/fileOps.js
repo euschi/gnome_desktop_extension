@@ -30,7 +30,7 @@ async function nautilus(method, signature, args, fallback) {
     try {
         await call(NAUTILUS, method, new GLib.Variant(signature, [...args, platformData()]));
     } catch (e) {
-        console.warn(`DeskIcons: Nautilus ${method} non disponibile (${e.message}), uso Gio`);
+        console.warn(`DeskIcons: Nautilus ${method} unavailable (${e.message}), using Gio`);
         if (fallback)
             await fallback();
     }

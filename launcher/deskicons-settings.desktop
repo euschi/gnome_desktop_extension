@@ -1,10 +1,14 @@
 [Desktop Entry]
 Type=Application
-Name=Icone Desktop
-GenericName=Impostazioni icone del desktop
-Comment=Personalizza dimensione, disposizione e comportamento delle icone sul desktop
+Name=Desktop Icons
+Name[it]=Icone Desktop
+GenericName=Desktop Icon Settings
+GenericName[it]=Impostazioni icone del desktop
+Comment=Customize size, layout and behavior of the desktop icons
+Comment[it]=Personalizza dimensione, disposizione e comportamento delle icone sul desktop
 Exec=gnome-extensions prefs deskicons@euschi.github.io
 Icon=user-desktop
 Categories=GNOME;GTK;Settings;DesktopSettings;
-Keywords=desktop;icone;scrivania;icons;
+Keywords=desktop;icons;
+Keywords[it]=desktop;icone;scrivania;icons;
 StartupNotify=true

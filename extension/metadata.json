@@ -6,6 +6,7 @@
     "51"
   ],
   "settings-schema": "org.gnome.shell.extensions.deskicons",
+  "gettext-domain": "deskicons",
   "url": "https://github.com/euschi/gnome_desktop_extension",
   "version-name": "0.1.0"
 }

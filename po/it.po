@@ -1,0 +1,593 @@
+# Italian translation for Icone Desktop (deskicons@euschi.github.io).
+# Copyright (C) 2026 Eugenio Schintu
+# This file is distributed under the same license as the deskicons package.
+# Eugenio Schintu, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: deskicons\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-09 10:00+0200\n"
+"PO-Revision-Date: 2026-10-09 09:59+0200\n"
+"Last-Translator: Eugenio Schintu\n"
+"Language-Team: Italian\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: extension/prefs.js:18
+msgid "Shadow"
+msgstr "Ombra"
+
+#: extension/prefs.js:18
+msgid "Dark Background"
+msgstr "Sfondo scuro"
+
+#: extension/prefs.js:19
+msgid "None"
+msgstr "Nessuno"
+
+#: extension/prefs.js:20
+msgid "Top Left"
+msgstr "In alto a sinistra"
+
+#: extension/prefs.js:20
+msgid "Top Right"
+msgstr "In alto a destra"
+
+#: extension/prefs.js:21
+msgid "Bottom Left"
+msgstr "In basso a sinistra"
+
+#: extension/prefs.js:21
+msgid "Bottom Right"
+msgstr "In basso a destra"
+
+#: extension/prefs.js:22
+msgid "Columns First (vertical)"
+msgstr "Prima le colonne (verticale)"
+
+#: extension/prefs.js:23
+msgid "Rows First (horizontal)"
+msgstr "Prima le righe (orizzontale)"
+
+#: extension/prefs.js:24 extension/lib/indicator.js:68
+#: extension/app/menus.js:70
+msgid "Name"
+msgstr "Nome"
+
+#: extension/prefs.js:24 extension/lib/indicator.js:69
+#: extension/app/menus.js:70
+msgid "Modification Date"
+msgstr "Data di modifica"
+
+#: extension/prefs.js:25 extension/lib/indicator.js:70
+#: extension/app/menus.js:71
+msgid "Type"
+msgstr "Tipo"
+
+#: extension/prefs.js:25 extension/lib/indicator.js:71
+#: extension/app/menus.js:71
+msgid "Size"
+msgstr "Dimensione"
+
+#: extension/prefs.js:26
+msgid "All Monitors"
+msgstr "Tutti i monitor"
+
+#: extension/prefs.js:26
+msgid "Primary Monitor Only"
+msgstr "Solo il monitor principale"
+
+#: extension/prefs.js:27
+msgid "Double Click"
+msgstr "Doppio click"
+
+#: extension/prefs.js:27
+msgid "Single Click"
+msgstr "Click singolo"
+
+#: extension/prefs.js:28
+msgid "Ask for Confirmation"
+msgstr "Chiedi conferma"
+
+#: extension/prefs.js:28
+msgid "Always Launch"
+msgstr "Avvia sempre"
+
+#: extension/prefs.js:78
+msgid "Appearance"
+msgstr "Aspetto"
+
+#: extension/prefs.js:79
+msgid "Icons"
+msgstr "Icone"
+
+#: extension/prefs.js:80
+msgid "Icon Size"
+msgstr "Dimensione icone"
+
+#: extension/prefs.js:80
+msgid "In pixels"
+msgstr "In pixel"
+
+#: extension/prefs.js:81
+msgid "Spacing"
+msgstr "Spaziatura"
+
+#: extension/prefs.js:81
+msgid "Space between icons in pixels"
+msgstr "Spazio tra le icone in pixel"
+
+#: extension/prefs.js:82
+msgid "Show Thumbnails"
+msgstr "Mostra anteprime"
+
+#: extension/prefs.js:82
+msgid "Previews of images, videos and documents"
+msgstr "Miniature di immagini, video e documenti"
+
+#: extension/prefs.js:84
+msgid "Labels"
+msgstr "Etichette"
+
+#: extension/prefs.js:85
+msgid "Maximum Lines"
+msgstr "Righe massime"
+
+#: extension/prefs.js:86
+msgid "Style"
+msgstr "Stile"
+
+#: extension/prefs.js:90
+msgid "Layout"
+msgstr "Disposizione"
+
+#: extension/prefs.js:91
+msgid "New Icons"
+msgstr "Nuove icone"
+
+#: extension/prefs.js:92
+msgid "Start Corner"
+msgstr "Angolo di partenza"
+
+#: extension/prefs.js:93
+msgid "Where new icons appear"
+msgstr "Dove compaiono le nuove icone"
+
+#: extension/prefs.js:94
+msgid "Fill Direction"
+msgstr "Direzione di riempimento"
+
+#: extension/prefs.js:95
+msgid "Monitors"
+msgstr "Monitor"
+
+#: extension/prefs.js:97
+msgid "Grid"
+msgstr "Griglia"
+
+#: extension/prefs.js:98 extension/app/menus.js:81
+msgid "Align to Grid"
+msgstr "Allinea alla griglia"
+
+#: extension/prefs.js:99
+msgid "When off, icons stay exactly where you drop them"
+msgstr "Se disattivato le icone restano esattamente dove le rilasci"
+
+#: extension/prefs.js:100 extension/lib/indicator.js:48
+#: extension/app/menus.js:80
+msgid "Keep Arranged"
+msgstr "Mantieni ordinate"
+
+#: extension/prefs.js:101
+msgid "Icons are always laid out according to the sort order"
+msgstr "Le icone vengono sempre disposte secondo l'ordinamento"
+
+#: extension/prefs.js:102 extension/lib/indicator.js:65
+#: extension/app/menus.js:83
+msgid "Sort By"
+msgstr "Ordina per"
+
+#: extension/prefs.js:103 extension/app/menus.js:74
+msgid "Reverse Order"
+msgstr "Ordine inverso"
+
+#: extension/prefs.js:104
+msgid "Folders Before Files"
+msgstr "Cartelle prima dei file"
+
+#: extension/prefs.js:106
+msgid "Margins"
+msgstr "Margini"
+
+#: extension/prefs.js:107
+msgid "Top"
+msgstr "Superiore"
+
+#: extension/prefs.js:108
+msgid "Bottom"
+msgstr "Inferiore"
+
+#: extension/prefs.js:109
+msgid "Left"
+msgstr "Sinistro"
+
+#: extension/prefs.js:110
+msgid "Right"
+msgstr "Destro"
+
+#: extension/prefs.js:111
+msgid "Free space at the screen edges, in pixels"
+msgstr "Spazio libero ai bordi dello schermo, in pixel"
+
+#: extension/prefs.js:114
+msgid "Terminal (empty = automatic)"
+msgstr "Terminale (vuoto = automatico)"
+
+#: extension/prefs.js:117
+msgid "Reset to Defaults"
+msgstr "Ripristina impostazioni predefinite"
+
+#: extension/prefs.js:124
+msgid "Behavior"
+msgstr "Comportamento"
+
+#: extension/prefs.js:125
+msgid "Opening"
+msgstr "Apertura"
+
+#: extension/prefs.js:126
+msgid "Open Items With"
+msgstr "Apri gli elementi con"
+
+#: extension/prefs.js:127
+msgid "Untrusted .desktop Launchers"
+msgstr "Lanciatori .desktop non attendibili"
+
+#: extension/prefs.js:130
+msgid "Safety"
+msgstr "Sicurezza"
+
+#: extension/prefs.js:131
+msgid "Confirm Before Moving to Trash"
+msgstr "Conferma prima di spostare nel cestino"
+
+#: extension/prefs.js:133
+msgid "Panel"
+msgstr "Pannello"
+
+#: extension/prefs.js:134
+msgid "Show Panel Indicator"
+msgstr "Mostra indicatore nel pannello"
+
+#: extension/prefs.js:135
+msgid "Show Icons on the Desktop"
+msgstr "Mostra icone sul desktop"
+
+#: extension/prefs.js:140
+msgid "Items"
+msgstr "Elementi"
+
+#: extension/prefs.js:141
+msgid "Special Items"
+msgstr "Elementi speciali"
+
+#: extension/prefs.js:142
+msgid "Home Folder"
+msgstr "Cartella Home"
+
+#: extension/prefs.js:143 extension/app/desktopModel.js:230
+msgid "Trash"
+msgstr "Cestino"
+
+#: extension/prefs.js:144
+msgid "Mounted Drives"
+msgstr "Unità montate"
+
+#: extension/prefs.js:144
+msgid "Disks and USB sticks"
+msgstr "Dischi e chiavette USB"
+
+#: extension/prefs.js:145
+msgid "Network Drives"
+msgstr "Unità di rete"
+
+#: extension/prefs.js:147
+msgid "Files"
+msgstr "File"
+
+#: extension/prefs.js:148 extension/app/menus.js:82
+msgid "Show Hidden Files"
+msgstr "Mostra file nascosti"
+
+#: extension/lib/indicator.js:23
+msgid "Desktop Icons"
+msgstr "Icone Desktop"
+
+#: extension/lib/indicator.js:42 extension/app/menus.js:92
+msgid "Show Icons"
+msgstr "Mostra icone"
+
+#: extension/lib/indicator.js:63 extension/app/menus.js:79
+msgid "Arrange Icons"
+msgstr "Disponi icone"
+
+#: extension/lib/indicator.js:95 extension/app/desktopController.js:878
+#: extension/app/menus.js:58
+msgid "New Folder"
+msgstr "Nuova cartella"
+
+#: extension/lib/indicator.js:99 extension/app/menus.js:88
+msgid "Open Desktop in Files"
+msgstr "Apri Scrivania in File"
+
+#: extension/lib/indicator.js:100
+msgid "Reload"
+msgstr "Ricarica"
+
+#: extension/lib/indicator.js:101
+msgid "Settings…"
+msgstr "Impostazioni…"
+
+#: extension/app/desktopController.js:774
+msgid "Untrusted Launcher"
+msgstr "Lanciatore non attendibile"
+
+#. Translators: %s is the name of the launcher
+#: extension/app/desktopController.js:776
+#, javascript-format
+msgid ""
+"“%s” is not marked as trusted. Only launch it if you know where it comes "
+"from."
+msgstr ""
+"«%s» non è contrassegnato come attendibile. Avvialo solo se ne conosci la "
+"provenienza."
+
+#: extension/app/desktopController.js:778
+msgid "Allow and Launch"
+msgstr "Consenti e avvia"
+
+#: extension/app/desktopController.js:843
+msgid "Move to Trash?"
+msgstr "Spostare nel cestino?"
+
+#. Translators: %d is the number of selected items
+#: extension/app/desktopController.js:845
+#, javascript-format
+msgid "The selected item will be moved to the trash."
+msgid_plural "%d items will be moved to the trash."
+msgstr[0] "L'elemento selezionato verrà spostato nel cestino."
+msgstr[1] "%d elementi verranno spostati nel cestino."
+
+#: extension/app/desktopController.js:848 extension/app/menus.js:143
+msgid "Move to Trash"
+msgstr "Sposta nel cestino"
+
+#: extension/app/desktopController.js:866
+msgid "Unable to Eject"
+msgstr "Impossibile espellere"
+
+#: extension/app/desktopController.js:866
+msgid "Unable to Unmount"
+msgstr "Impossibile smontare"
+
+#: extension/app/desktopController.js:899
+msgid "Cancel"
+msgstr "Annulla"
+
+#: extension/app/desktopController.js:904
+msgid "OK"
+msgstr "OK"
+
+#: extension/app/desktopModel.js:218
+msgid "Home"
+msgstr "Home"
+
+#: extension/app/menus.js:61
+msgid "New Document"
+msgstr "Nuovo documento"
+
+#: extension/app/menus.js:65
+msgid "Paste"
+msgstr "Incolla"
+
+#: extension/app/menus.js:66
+msgid "Undo"
+msgstr "Annulla"
+
+#: extension/app/menus.js:67
+msgid "Redo"
+msgstr "Ripeti"
+
+#: extension/app/menus.js:75
+msgid "Folders First"
+msgstr "Cartelle prima"
+
+#: extension/app/menus.js:78
+msgid "Select All"
+msgstr "Seleziona tutto"
+
+#: extension/app/menus.js:87 extension/app/menus.js:112
+#: extension/app/menus.js:120 extension/app/menus.js:147
+msgid "Open in Terminal"
+msgstr "Apri nel terminale"
+
+#: extension/app/menus.js:91
+msgid "Change Background…"
+msgstr "Cambia sfondo…"
+
+#: extension/app/menus.js:93
+msgid "Icon Settings…"
+msgstr "Impostazioni icone…"
+
+#: extension/app/menus.js:106 extension/app/menus.js:111
+#: extension/app/menus.js:119 extension/app/menus.js:126
+msgid "Open"
+msgstr "Apri"
+
+#: extension/app/menus.js:107
+msgid "Empty Trash"
+msgstr "Svuota cestino"
+
+#: extension/app/menus.js:114
+msgid "Eject"
+msgstr "Espelli"
+
+#: extension/app/menus.js:115
+msgid "Unmount"
+msgstr "Smonta"
+
+#: extension/app/menus.js:121 extension/app/menus.js:148
+msgid "Properties"
+msgstr "Proprietà"
+
+#: extension/app/menus.js:126
+msgid "Run"
+msgstr "Esegui"
+
+#: extension/app/menus.js:127
+msgid "Allow Launching"
+msgstr "Consenti avvio"
+
+#: extension/app/menus.js:132
+msgid "Open With"
+msgstr "Apri con"
+
+#: extension/app/menus.js:138
+msgid "Cut"
+msgstr "Taglia"
+
+#: extension/app/menus.js:139
+msgid "Copy"
+msgstr "Copia"
+
+#: extension/app/menus.js:140
+msgid "Copy Path"
+msgstr "Copia percorso"
+
+#: extension/app/menus.js:142
+msgid "Rename…"
+msgstr "Rinomina…"
+
+#: extension/app/menus.js:144
+msgid "Delete Permanently"
+msgstr "Elimina definitivamente"
+
+#: extension/app/menus.js:146
+msgid "Show in Files"
+msgstr "Mostra in File"
+
+#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:9
+msgid "Icon size (px)"
+msgstr "Dimensione icone (px)"
+
+#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:14
+msgid "Maximum label lines"
+msgstr "Righe massime dell'etichetta"
+
+#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:23
+msgid "Label style"
+msgstr "Stile delle etichette"
+
+#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:28
+msgid "Spacing between icons (px)"
+msgstr "Spaziatura tra le icone (px)"
+
+#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:32
+msgid "Show file thumbnails"
+msgstr "Mostra anteprime dei file"
+
+#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:44
+msgid "Corner from which new icons are placed"
+msgstr "Angolo da cui posizionare le nuove icone"
+
+#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:52
+msgid "Fill direction (columns or rows first)"
+msgstr "Direzione di riempimento (prima colonne o righe)"
+
+#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:57
+msgid "Top margin"
+msgstr "Margine superiore"
+
+#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:62
+msgid "Bottom margin"
+msgstr "Margine inferiore"
+
+#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:67
+msgid "Left margin"
+msgstr "Margine sinistro"
+
+#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:72
+msgid "Right margin"
+msgstr "Margine destro"
+
+#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:76
+msgid "Align icons to the grid"
+msgstr "Allinea le icone alla griglia"
+
+#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:80
+msgid "Keep icons arranged"
+msgstr "Mantieni le icone ordinate"
+
+#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:90
+msgid "Sort criterion"
+msgstr "Criterio di ordinamento"
+
+#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:94
+msgid "Reverse order"
+msgstr "Ordine inverso"
+
+#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:98
+msgid "Folders before files"
+msgstr "Cartelle prima dei file"
+
+#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:106
+msgid "Monitors on which to show icons"
+msgstr "Monitor su cui mostrare le icone"
+
+#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:112
+msgid "Icons visible"
+msgstr "Icone visibili"
+
+#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:120
+msgid "Click to open"
+msgstr "Click per aprire"
+
+#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:128
+msgid "Launching untrusted .desktop launchers"
+msgstr "Avvio dei lanciatori .desktop non attendibili"
+
+#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:132
+msgid "Ask for confirmation before moving to trash"
+msgstr "Chiedi conferma prima di spostare nel cestino"
+
+#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:136
+msgid "Terminal command (empty = automatic)"
+msgstr "Comando del terminale (vuoto = automatico)"
+
+#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:140
+msgid "Show panel indicator"
+msgstr "Mostra indicatore nel pannello"
+
+#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:146
+msgid "Show the Home folder"
+msgstr "Mostra la cartella Home"
+
+#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:150
+msgid "Show the Trash"
+msgstr "Mostra il Cestino"
+
+#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:154
+msgid "Show mounted drives"
+msgstr "Mostra le unità montate"
+
+#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:158
+msgid "Show network drives"
+msgstr "Mostra le unità di rete"
+
+#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:162
+msgid "Show hidden files"
+msgstr "Mostra i file nascosti"

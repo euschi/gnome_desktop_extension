@@ -13,6 +13,7 @@ import Adw from 'gi://Adw?version=1';
 import System from 'system';
 
 import {DesktopController} from './desktopController.js';
+import {initTranslations} from './i18n.js';
 
 const SCHEMA_ID = 'org.gnome.shell.extensions.deskicons';
 
@@ -44,7 +45,7 @@ function loadSettings(extensionDir) {
         source = Gio.SettingsSchemaSource.new_from_directory(schemaDir, source, false);
     const schema = source.lookup(SCHEMA_ID, true);
     if (!schema)
-        throw new Error(`schema ${SCHEMA_ID} non trovato (eseguire "make schemas")`);
+        throw new Error(`schema ${SCHEMA_ID} not found (run "make schemas")`);
     return new Gio.Settings({settings_schema: schema});
 }
 
@@ -60,6 +61,7 @@ function debugMonitors() {
 }
 
 const args = parseArgs(System.programArgs);
+initTranslations(args.extensionDir);
 const settings = loadSettings(args.extensionDir);
 
 const app = new Adw.Application({
