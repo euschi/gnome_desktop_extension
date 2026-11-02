@@ -15,7 +15,7 @@ SCHEMA    := $(SRC)/schemas/org.gnome.shell.extensions.deskicons.gschema.xml
 all: schemas locale
 
 schemas:
-	glib-compile-schemas $(SRC)/schemas
+	glib-compile-schemas --strict $(SRC)/schemas
 
 # Traduzioni compilate in extension/locale/ (per l'installazione con symlink;
 # lo zip le compila da sé con --podir)

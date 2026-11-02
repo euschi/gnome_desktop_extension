@@ -58,7 +58,7 @@ class FileItem extends Gtk.Box {
         });
         drag.connect('drag-begin', source =>
             source.set_icon(Gtk.WidgetPaintable.new(this), this._dragX, this._dragY));
-        drag.connect('drag-end', () => controller.onDragEnd(this));
+        drag.connect('drag-end', () => controller.onDragEnd());
         this.add_controller(drag);
 
         this.applySettings(controller.settings);
@@ -67,7 +67,6 @@ class FileItem extends Gtk.Box {
 
     applySettings(settings) {
         const size = itemSize(settings);
-        this._size = size;
         this.set_size_request(size.width, size.height);
         this._image.set_pixel_size(size.icon);
         this._label.set_lines(size.lines);
@@ -116,36 +115,32 @@ class FileItem extends Gtk.Box {
                 this._thumbPath = null;
             }
         }
-        this._image.set_from_gicon(this.item?.gicon ?? Gio.ThemedIcon.new('text-x-generic'));
+        this._image.set_from_gicon(this.item.gicon ?? Gio.ThemedIcon.new('text-x-generic'));
+    }
+
+    _setCssClass(name, on) {
+        if (on)
+            this.add_css_class(name);
+        else
+            this.remove_css_class(name);
     }
 
     setSelected(selected) {
-        if (selected)
-            this.add_css_class('selected');
-        else
-            this.remove_css_class('selected');
+        this._setCssClass('selected', selected);
     }
 
     setCut(cut) {
-        if (cut)
-            this.add_css_class('cut');
-        else
-            this.remove_css_class('cut');
+        this._setCssClass('cut', cut);
     }
 
     setDropHighlight(on) {
-        if (on)
-            this.add_css_class('drop-target');
-        else
-            this.remove_css_class('drop-target');
+        this._setCssClass('drop-target', on);
     }
 
     get isDropTarget() {
-        return this.item.isDir || this.item.kind === 'trash' ||
-            (this.item.isLauncher && this.item.isTrusted);
+        return this.item.isDir || (this.item.isLauncher && this.item.isTrusted);
     }
 
-    // Rinomina inline con un popover
     startRename(onDone) {
         const entry = new Gtk.Entry({text: this.item.info.get_display_name(), width_chars: 24});
         const popover = new Gtk.Popover({child: entry, position: Gtk.PositionType.BOTTOM});
@@ -175,4 +170,3 @@ class FileItem extends Gtk.Box {
         entry.select_region(0, dot > 0 ? dot : -1);
     }
 });
-

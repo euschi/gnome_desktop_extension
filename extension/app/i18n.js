@@ -8,12 +8,10 @@
 import GLib from 'gi://GLib';
 import Gettext from 'gettext';
 
-export const DOMAIN = 'deskicons';
+const DOMAIN = 'deskicons';
 
 export function initTranslations(extensionDir) {
-    const localeDir = extensionDir ? GLib.build_filenamev([extensionDir, 'locale']) : null;
-    if (localeDir && GLib.file_test(localeDir, GLib.FileTest.IS_DIR))
-        Gettext.bindtextdomain(DOMAIN, localeDir);
+    Gettext.bindtextdomain(DOMAIN, GLib.build_filenamev([extensionDir, 'locale']));
 }
 
 export function _(str) {

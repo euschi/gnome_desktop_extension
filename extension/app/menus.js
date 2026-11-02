@@ -125,7 +125,7 @@ export function itemMenu(ctx) {
     const open = section(
         item(single?.isLauncher ? _('Run') : _('Open'), 'open'),
         single?.isLauncher && !single.isTrusted ? item(_('Allow Launching'), 'allow-launch') : null);
-    if (ctx.appsForType?.length) {
+    if (ctx.appsForType.length) {
         const apps = new Gio.Menu();
         for (const app of ctx.appsForType)
             apps.append_item(item(app.get_name(), 'open-with', new GLib.Variant('s', app.get_id())));

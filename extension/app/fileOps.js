@@ -3,7 +3,9 @@
 
 // Operazioni sui file delegate a Nautilus (org.gnome.Nautilus.FileOperations2)
 // così da avere finestre di avanzamento, gestione conflitti e annulla/ripeti
-// condivisi con il file manager. Se Nautilus non è disponibile si usa Gio.
+// condivisi con il file manager. Se Nautilus non è disponibile si usa Gio, tranne
+// per le operazioni senza un equivalente sicuro (eliminazione definitiva, cestino
+// da svuotare, annulla/ripeti).
 
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
@@ -13,6 +15,14 @@ const NAUTILUS = ['org.gnome.Nautilus', '/org/gnome/Nautilus/FileOperations2',
 const FILE_MANAGER = ['org.freedesktop.FileManager1', '/org/freedesktop/FileManager1',
     'org.freedesktop.FileManager1'];
 
+// Solo in questi casi l'operazione non è mai partita e si può ripiegare su Gio. Un
+// errore dell'operazione stessa non deve farla ripetere da un'altra parte.
+const NAUTILUS_UNAVAILABLE = [
+    Gio.DBusError.SERVICE_UNKNOWN, Gio.DBusError.NAME_HAS_NO_OWNER,
+    Gio.DBusError.UNKNOWN_METHOD, Gio.DBusError.SPAWN_EXEC_FAILED,
+    Gio.DBusError.SPAWN_CHILD_EXITED,
+];
+
 function platformData() {
     return {
         'parent-handle': new GLib.Variant('s', ''),
@@ -21,18 +31,24 @@ function platformData() {
     };
 }
 
-async function call([name, path, iface], method, params) {
+function call([name, path, iface], method, params, timeout = -1) {
     return Gio.DBus.session.call(name, path, iface, method, params,
-        null, Gio.DBusCallFlags.NONE, -1, null);
+        null, Gio.DBusCallFlags.NONE, timeout, null);
 }
 
-async function nautilus(method, signature, args, fallback) {
+// Senza timeout: la risposta può arrivare solo a operazione conclusa e, nel
+// frattempo, Nautilus può essere in attesa di una scelta dell'utente
+async function nautilus(method, signature, args, fallback = null) {
     try {
-        await call(NAUTILUS, method, new GLib.Variant(signature, [...args, platformData()]));
+        await call(NAUTILUS, method, new GLib.Variant(signature, [...args, platformData()]),
+            GLib.MAXINT32);
     } catch (e) {
-        console.warn(`DeskIcons: Nautilus ${method} unavailable (${e.message}), using Gio`);
-        if (fallback)
-            await fallback();
+        if (!NAUTILUS_UNAVAILABLE.some(code => e.matches(Gio.DBusError, code))) {
+            logErr(e);
+            return;
+        }
+        console.warn(`DeskIcons: Nautilus ${method} unavailable (${e.message})`);
+        await fallback?.();
     }
 }
 
@@ -54,10 +70,7 @@ export function trashUris(uris) {
 }
 
 export function deleteUris(uris) {
-    return nautilus('DeleteURIs', '(asa{sv})', [uris], () => {
-        for (const uri of uris)
-            deleteRecursive(Gio.File.new_for_uri(uri));
-    });
+    return nautilus('DeleteURIs', '(asa{sv})', [uris]);
 }
 
 export function createFolder(parentUri, name) {
@@ -71,15 +84,15 @@ export function renameUri(uri, newName) {
 }
 
 export function emptyTrash() {
-    return nautilus('EmptyTrash', '(ba{sv})', [true], null);
+    return nautilus('EmptyTrash', '(ba{sv})', [true]);
 }
 
 export function undo() {
-    return nautilus('Undo', '(a{sv})', [], null);
+    return nautilus('Undo', '(a{sv})', []);
 }
 
 export function redo() {
-    return nautilus('Redo', '(a{sv})', [], null);
+    return nautilus('Redo', '(a{sv})', []);
 }
 
 // 0 = niente da annullare, 1 = annulla disponibile, 2 = ripeti disponibile
@@ -107,10 +120,9 @@ export function showProperties(uris) {
     return call(FILE_MANAGER, 'ShowItemProperties', new GLib.Variant('(ass)', [uris, ''])).catch(logErr);
 }
 
-// Copia un modello dentro `destDir` con nome univoco (non passa da Nautilus
-// perché CopyURIs non permette di scegliere il nome di destinazione)
-export async function copyTemplate(templateFile, destFile) {
-    await templateFile.copy_async(destFile, Gio.FileCopyFlags.NONE,
+// Non passa da Nautilus: CopyURIs non permette di scegliere il nome di destinazione
+export function copyTemplate(templateFile, destFile) {
+    return templateFile.copy_async(destFile, Gio.FileCopyFlags.NONE,
         GLib.PRIORITY_DEFAULT, null, null);
 }
 
@@ -141,15 +153,4 @@ function copyRecursive(src, dest) {
     let info;
     while ((info = en.next_file(null)))
         copyRecursive(src.get_child(info.get_name()), dest.get_child(info.get_name()));
-}
-
-function deleteRecursive(file) {
-    const type = file.query_file_type(Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS, null);
-    if (type === Gio.FileType.DIRECTORY) {
-        const en = file.enumerate_children('standard::name', Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS, null);
-        let info;
-        while ((info = en.next_file(null)))
-            deleteRecursive(file.get_child(info.get_name()));
-    }
-    file.delete(null);
 }

@@ -39,7 +39,6 @@ class DesktopWindow extends Gtk.ApplicationWindow {
             application: app,
             title: `@deskicons:${monitor.index}`,
             decorated: debug,
-            resizable: true,
             default_width: debug ? Math.round(monitor.width * 0.6) : monitor.width,
             default_height: debug ? Math.round(monitor.height * 0.6) : monitor.height,
             css_classes: debug ? ['deskicons-window', 'debug'] : ['deskicons-window'],
@@ -97,7 +96,7 @@ class DesktopWindow extends Gtk.ApplicationWindow {
         click.connect('released', (gesture, nPress, x, y) => {
             const widget = this.itemAt(x, y);
             if (widget) {
-                this._controller.onItemReleased(this, widget, gesture.get_current_button(),
+                this._controller.onItemReleased(widget, gesture.get_current_button(),
                     nPress, gesture.get_current_event_state());
             }
         });
@@ -117,7 +116,7 @@ class DesktopWindow extends Gtk.ApplicationWindow {
             // Il rettangolo va disegnato sopra le icone
             if (this.grid.get_last_child() !== this._band)
                 this._band.insert_before(this.grid, null);
-            this._controller.onRubberBandBegin(this, gesture.get_current_event_state());
+            this._controller.onRubberBandBegin(gesture.get_current_event_state());
         });
         drag.connect('drag-update', (_g, dx, dy) => {
             const rect = {
@@ -148,7 +147,7 @@ class DesktopWindow extends Gtk.ApplicationWindow {
             this._controller.onDropMotion(this, drop, x, y, true));
         target.connect('drag-motion', (_t, drop, x, y) =>
             this._controller.onDropMotion(this, drop, x, y, false));
-        target.connect('drag-leave', () => this._controller.onDropLeave(this));
+        target.connect('drag-leave', () => this._controller.onDropLeave());
         target.connect('drop', (_t, drop, x, y) => {
             this._controller.onDrop(this, drop, x, y);
             return true;
@@ -165,7 +164,6 @@ class DesktopWindow extends Gtk.ApplicationWindow {
         this.grid.put(widget, x, y);
     }
 
-    // Mostra un menù a comparsa nel punto indicato
     popupMenu(model, x, y) {
         const popover = Gtk.PopoverMenu.new_from_model(model);
         popover.set_has_arrow(false);
