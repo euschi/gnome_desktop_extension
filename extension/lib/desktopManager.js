@@ -13,52 +13,49 @@ import Meta from 'gi://Meta';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 const TITLE_RE = /^@deskicons:(\d+)$/;
+const RELOAD_DELAY_MS = 200;
 const RESTART_DELAY_MS = 1000;
 const MAX_CRASHES = 5;
 const CRASH_WINDOW_US = 60 * GLib.USEC_PER_SEC;
+const SIGTERM = 15;
 
 export class DesktopManager {
-    constructor(extension) {
-        this._extension = extension;
-        this._settings = extension.getSettings();
+    constructor(extensionPath, settings) {
+        this._extensionPath = extensionPath;
+        this._settings = settings;
         this._client = null;
         this._subprocess = null;
         this._cancellable = null;
-        this._windows = new Map(); // MetaWindow -> {monitor, signals[]}
+        this._windows = new Map(); // MetaWindow -> monitor (null finché non è noto)
         this._monitors = [];
         this._crashes = [];
         this._restartId = 0;
-        this._signals = [];
-        this._destroyed = false;
     }
 
     enable() {
-        this._connect(Main.layoutManager, 'monitors-changed', () => this.restart());
-        this._connect(global.display, 'workareas-changed', () => this._placeAll());
-        this._connect(global.display, 'window-created', (_d, win) => this._onWindowCreated(win));
-        this._connect(this._settings, 'changed::monitors', () => this.restart());
+        Main.layoutManager.connectObject('monitors-changed', () => this.restart(), this);
+        global.display.connectObject(
+            'workareas-changed', () => this._placeAll(),
+            'window-created', (_d, win) => this._onWindowCreated(win),
+            this);
+        this._settings.connectObject('changed::monitors', () => this.restart(), this);
         this._launch();
     }
 
     destroy() {
-        this._destroyed = true;
         if (this._restartId) {
             GLib.source_remove(this._restartId);
             this._restartId = 0;
         }
-        for (const [obj, id] of this._signals)
-            obj.disconnect(id);
-        this._signals = [];
+        Main.layoutManager.disconnectObject(this);
+        global.display.disconnectObject(this);
+        this._settings.disconnectObject(this);
         this._kill();
     }
 
     restart() {
         this._kill();
-        this._scheduleLaunch(200);
-    }
-
-    _connect(obj, signal, cb) {
-        this._signals.push([obj, obj.connect(signal, cb)]);
+        this._scheduleLaunch(RELOAD_DELAY_MS);
     }
 
     _computeMonitors() {
@@ -81,9 +78,6 @@ export class DesktopManager {
     }
 
     _launch() {
-        if (this._destroyed || this._client)
-            return;
-
         const gjs = GLib.find_program_in_path('gjs');
         if (!gjs) {
             logError(new Error('gjs not found in PATH'), 'DeskIcons');
@@ -91,7 +85,7 @@ export class DesktopManager {
         }
 
         this._monitors = this._computeMonitors();
-        const dir = this._extension.path;
+        const dir = this._extensionPath;
         const argv = [
             gjs, '-m', `${dir}/app/main.js`,
             '--extension-dir', dir,
@@ -106,7 +100,6 @@ export class DesktopManager {
             this._client = Meta.WaylandClient.new_subprocess(global.context, launcher, argv);
         } catch (e) {
             logError(e, 'DeskIcons: cannot start the helper');
-            this._client = null;
             return;
         }
 
@@ -124,8 +117,7 @@ export class DesktopManager {
             this._client = null;
             this._subprocess = null;
             this._forgetWindows();
-            if (!this._destroyed)
-                this._onHelperExited(proc);
+            this._onHelperExited(proc);
         });
 
         // Le finestre potrebbero già esistere (es. riavvio rapido)
@@ -161,60 +153,50 @@ export class DesktopManager {
     _kill() {
         this._cancellable?.cancel();
         this._cancellable = null;
-        this._subprocess?.send_signal(15);
+        this._subprocess?.send_signal(SIGTERM);
         this._subprocess = null;
         this._client = null;
         this._forgetWindows();
     }
 
     _forgetWindows() {
-        for (const [win, data] of this._windows) {
-            for (const id of data.signals)
-                win.disconnect(id);
-        }
+        for (const win of this._windows.keys())
+            win.disconnectObject(this);
         this._windows.clear();
     }
 
     _onWindowCreated(win) {
-        if (!win || !this._client || this._windows.has(win))
-            return;
-        let owned = false;
-        try {
-            owned = this._client.owns_window(win);
-        } catch {
-            owned = false;
-        }
-        if (!owned)
+        if (!this._client || this._windows.has(win) || !this._client.owns_window(win))
             return;
 
-        const data = {monitor: null, signals: []};
-        this._windows.set(win, data);
-        data.signals.push(win.connect('notify::title', () => this._setup(win)));
-        data.signals.push(win.connect('position-changed', () => this._place(win)));
-        data.signals.push(win.connect('size-changed', () => this._place(win)));
-        data.signals.push(win.connect('unmanaged', () => {
-            for (const id of data.signals)
-                win.disconnect(id);
-            this._windows.delete(win);
-        }));
+        this._windows.set(win, null);
+        win.connectObject(
+            'notify::title', () => this._setup(win),
+            'position-changed', () => this._place(win),
+            'size-changed', () => this._place(win),
+            'unmanaged', () => {
+                win.disconnectObject(this);
+                this._windows.delete(win);
+            },
+            this);
         this._setup(win);
     }
 
     _setup(win) {
-        const data = this._windows.get(win);
         const match = TITLE_RE.exec(win.get_title() ?? '');
-        if (!data || !match)
+        if (!match)
             return;
-        const index = parseInt(match[1]);
-        data.monitor = this._monitors.find(m => m.index === index) ?? null;
-        if (!data.monitor)
+        const index = parseInt(match[1], 10);
+        const monitor = this._monitors.find(m => m.index === index) ?? null;
+        this._windows.set(win, monitor);
+        if (!monitor)
             return;
 
         if (win.get_window_type() !== Meta.WindowType.DESKTOP)
             win.set_type(Meta.WindowType.DESKTOP);
         if (!win.is_on_all_workspaces())
             win.stick();
-        win.hide_from_window_list?.();
+        win.hide_from_window_list();
         this._place(win);
     }
 
@@ -231,7 +213,7 @@ export class DesktopManager {
     }
 
     _place(win) {
-        const m = this._windows.get(win)?.monitor;
+        const m = this._windows.get(win);
         if (!m)
             return;
         const r = win.get_frame_rect();

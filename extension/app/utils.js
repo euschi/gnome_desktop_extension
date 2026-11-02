@@ -8,9 +8,7 @@ import Gdk from 'gi://Gdk?version=4.0';
 
 Gio._promisify(Gio.File.prototype, 'enumerate_children_async');
 Gio._promisify(Gio.File.prototype, 'query_info_async');
-Gio._promisify(Gio.File.prototype, 'make_directory_async');
 Gio._promisify(Gio.File.prototype, 'copy_async');
-Gio._promisify(Gio.File.prototype, 'set_attributes_async');
 Gio._promisify(Gio.FileEnumerator.prototype, 'next_files_async');
 Gio._promisify(Gio.FileEnumerator.prototype, 'close_async');
 Gio._promisify(Gio.OutputStream.prototype, 'splice_async');
@@ -36,12 +34,7 @@ export function templatesDir() {
 }
 
 export function newDesktopAppInfo(path) {
-    const Klass = GioUnix.DesktopAppInfo;
-    try {
-        return Klass.new_from_filename(path);
-    } catch {
-        return null;
-    }
+    return GioUnix.DesktopAppInfo.new_from_filename(path);
 }
 
 export function launchContext() {
@@ -69,10 +62,8 @@ export function spawn(argv, cwd = null) {
         if (cwd)
             launcher.set_cwd(cwd);
         launcher.spawnv(argv);
-        return true;
     } catch (e) {
         console.error(`DeskIcons: cannot run ${argv.join(' ')}: ${e.message}`);
-        return false;
     }
 }
 
@@ -90,9 +81,13 @@ const TERMINALS = [
 export function openTerminal(settings, path) {
     const custom = settings.get_string('terminal').trim();
     if (custom) {
-        const [ok, argv] = GLib.shell_parse_argv(custom);
-        if (ok)
-            return spawn(argv, path);
+        try {
+            const [, argv] = GLib.shell_parse_argv(custom);
+            spawn(argv, path);
+            return;
+        } catch (e) {
+            console.error(`DeskIcons: invalid terminal command: ${e.message}`);
+        }
     }
     for (const [bin, args] of TERMINALS) {
         const exe = GLib.find_program_in_path(bin);
@@ -101,9 +96,9 @@ export function openTerminal(settings, path) {
         const argv = [exe, ...args];
         if (args.length)
             argv.push(path);
-        return spawn(argv, path);
+        spawn(argv, path);
+        return;
     }
-    return false;
 }
 
 export async function readStreamToString(stream) {
@@ -120,13 +115,19 @@ export function parseUriList(text) {
         .filter(l => l && !l.startsWith('#'));
 }
 
-export function uriListProvider(files) {
+function bytesProvider(mime, text) {
+    return Gdk.ContentProvider.new_for_bytes(mime,
+        new GLib.Bytes(new TextEncoder().encode(text)));
+}
+
+// Contenuto per drag e appunti: elenco di URI e percorsi come testo semplice,
+// più eventuali formati aggiuntivi ([mime, testo])
+export function uriListProvider(files, extraFormats = []) {
     const uris = files.map(f => f.get_uri());
-    const enc = new TextEncoder();
     return Gdk.ContentProvider.new_union([
-        Gdk.ContentProvider.new_for_bytes('text/uri-list',
-            new GLib.Bytes(enc.encode(`${uris.join('\r\n')}\r\n`))),
-        Gdk.ContentProvider.new_for_bytes('text/plain;charset=utf-8',
-            new GLib.Bytes(enc.encode(files.map(f => f.get_path() ?? f.get_uri()).join('\n')))),
+        ...extraFormats.map(([mime, text]) => bytesProvider(mime, text)),
+        bytesProvider('text/uri-list', `${uris.join('\r\n')}\r\n`),
+        bytesProvider('text/plain;charset=utf-8',
+            files.map(f => f.get_path() ?? f.get_uri()).join('\n')),
     ]);
 }

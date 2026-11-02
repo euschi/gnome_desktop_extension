@@ -95,8 +95,9 @@ On Arch/EndeavourOS this is enough:
 sudo pacman -S --needed gnome-shell gjs gtk4 libadwaita gnome-desktop-4 nautilus glib2 gettext make git
 ```
 
-Nautilus is optional but strongly recommended: without it, file operations
-still work (through Gio) but without progress windows or undo/redo.
+Nautilus is optional but strongly recommended: without it, copy, move, rename,
+new folder and trash still work (through Gio), but without progress windows.
+Undo/redo, emptying the trash and permanent deletion require Nautilus.
 
 > **Important:** do not use this extension together with another desktop
 > icons extension (e.g. *Desktop Icons NG (DING)* or *Gtk4 Desktop Icons NG*).

@@ -16,7 +16,7 @@ const FILE_ATTRIBUTES = [
     'standard::icon', 'standard::is-hidden', 'standard::is-backup',
     'standard::is-symlink', 'standard::content-type', 'standard::size',
     'time::modified', 'metadata::trusted', 'access::can-execute',
-    'unix::mode', 'id::filesystem', 'trash::item-count',
+    'unix::mode', 'trash::item-count',
 ].join(',');
 
 const RELOAD_DELAY_MS = 120;
@@ -34,7 +34,6 @@ export class DesktopItem {
         return this.file.get_path();
     }
 
-    // Tipi di elementi
     get isSpecial() {
         return this.kind !== 'file';
     }
@@ -75,16 +74,15 @@ export class DesktopItem {
 }
 
 export class DesktopModel {
-    constructor(settings, onChanged) {
+    constructor(settings, onChanged, onRename) {
         this._settings = settings;
         this._onChanged = onChanged;
+        this._onRename = onRename;
         this.dir = desktopDir();
         this.items = new Map();
         this._reloadId = 0;
         this._loading = false;
         this._pending = false;
-        this._renamed = []; // [oldName, newName]
-        this.onRename = null;
     }
 
     start() {
@@ -98,7 +96,7 @@ export class DesktopModel {
         this._dirMonitor = this.dir.monitor_directory(Gio.FileMonitorFlags.WATCH_MOVES, null);
         this._dirMonitor.connect('changed', (_m, file, other, event) => {
             if (event === Gio.FileMonitorEvent.RENAMED && other)
-                this.onRename?.(file.get_basename(), other.get_basename());
+                this._onRename(file.get_basename(), other.get_basename());
             this.scheduleReload();
         });
 
@@ -120,11 +118,11 @@ export class DesktopModel {
     destroy() {
         if (this._reloadId)
             GLib.source_remove(this._reloadId);
-        this._dirMonitor?.cancel();
-        this._trashMonitor?.cancel();
-        for (const id of this._volumeIds ?? [])
+        this._dirMonitor.cancel();
+        this._trashMonitor.cancel();
+        for (const id of this._volumeIds)
             this._volumeMonitor.disconnect(id);
-        for (const id of this._settingsIds ?? [])
+        for (const id of this._settingsIds)
             this._settings.disconnect(id);
     }
 
@@ -184,7 +182,6 @@ export class DesktopModel {
                 result.push(new DesktopItem({
                     id: `file:${name}`,
                     kind: 'file',
-                    name,
                     file,
                     info,
                     appInfo,
@@ -214,7 +211,7 @@ export class DesktopModel {
             const info = await this._queryInfo(file);
             if (info) {
                 result.push(new DesktopItem({
-                    id: 'home', kind: 'home', name: 'home', file, info, appInfo: null,
+                    id: 'home', kind: 'home', file, info, appInfo: null,
                     displayName: _('Home'),
                     gicon: Gio.ThemedIcon.new('user-home'),
                 }));
@@ -226,7 +223,7 @@ export class DesktopModel {
             const info = await this._queryInfo(file);
             const full = (info?.get_attribute_uint32('trash::item-count') ?? 0) > 0;
             result.push(new DesktopItem({
-                id: 'trash', kind: 'trash', name: 'trash', file, info, appInfo: null,
+                id: 'trash', kind: 'trash', file, info, appInfo: null,
                 displayName: _('Trash'),
                 gicon: Gio.ThemedIcon.new(full ? 'user-trash-full' : 'user-trash'),
                 trashFull: full,
@@ -245,7 +242,7 @@ export class DesktopModel {
                 if ((isNet && !showNet) || (!isNet && !showLocal))
                     continue;
                 result.push(new DesktopItem({
-                    id: `mount:${root.get_uri()}`, kind: 'mount', name: mount.get_name(),
+                    id: `mount:${root.get_uri()}`, kind: 'mount',
                     file: root, info: null, appInfo: null, mount,
                     displayName: mount.get_name(),
                     gicon: mount.get_icon(),

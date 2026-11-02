@@ -10,16 +10,16 @@ import {DeskIconsIndicator} from './lib/indicator.js';
 export default class DeskIconsExtension extends Extension {
     enable() {
         this._settings = this.getSettings();
-        this._manager = new DesktopManager(this);
+        this._manager = new DesktopManager(this.path, this._settings);
         this._manager.enable();
 
-        this._indicatorId = this._settings.connect('changed::show-indicator',
-            () => this._syncIndicator());
+        this._settings.connectObject('changed::show-indicator',
+            () => this._syncIndicator(), this);
         this._syncIndicator();
     }
 
     disable() {
-        this._settings.disconnect(this._indicatorId);
+        this._settings.disconnectObject(this);
         this._indicator?.destroy();
         this._indicator = null;
         this._manager.destroy();
@@ -30,7 +30,7 @@ export default class DeskIconsExtension extends Extension {
     _syncIndicator() {
         const show = this._settings.get_boolean('show-indicator');
         if (show && !this._indicator) {
-            this._indicator = new DeskIconsIndicator(this, this._manager);
+            this._indicator = new DeskIconsIndicator(this, this._manager, this._settings);
             Main.panel.addToStatusArea(this.uuid, this._indicator);
         } else if (!show && this._indicator) {
             this._indicator.destroy();
