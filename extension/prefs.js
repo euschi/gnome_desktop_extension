@@ -14,6 +14,12 @@ export default class DeskIconsPreferences extends ExtensionPreferences {
         window.set_default_size(640, 720);
         window.set_search_enabled(true);
 
+        const connections = [];
+        window.connect('close-request', () => {
+            connections.forEach(id => settings.disconnect(id));
+            return false;
+        });
+
         // [valore, etichetta]
         const LABEL_STYLES = [['shadow', _('Shadow')], ['background', _('Dark Background')],
             ['none', _('None')]];
@@ -54,11 +60,11 @@ export default class DeskIconsPreferences extends ExtensionPreferences {
             };
             sync();
             row.connect('notify::selected', () => {
-                const value = options[row.selected]?.[0];
-                if (value && value !== settings.get_string(key))
+                const [value] = options[row.selected];
+                if (value !== settings.get_string(key))
                     settings.set_string(key, value);
             });
-            settings.connect(`changed::${key}`, sync);
+            connections.push(settings.connect(`changed::${key}`, sync));
             return row;
         };
 
@@ -72,7 +78,6 @@ export default class DeskIconsPreferences extends ExtensionPreferences {
             const p = new Adw.PreferencesPage({title, icon_name: icon});
             groups.forEach(g => p.add(g));
             window.add(p);
-            return p;
         };
 
         page(_('Appearance'), 'applications-graphics-symbolic', [
@@ -111,7 +116,7 @@ export default class DeskIconsPreferences extends ExtensionPreferences {
             ], _('Free space at the screen edges, in pixels')),
         ]);
 
-                const terminal = new Adw.EntryRow({title: _('Terminal (empty = automatic)')});
+        const terminal = new Adw.EntryRow({title: _('Terminal (empty = automatic)')});
         settings.bind('terminal', terminal, 'text', Gio.SettingsBindFlags.DEFAULT);
 
         const reset = new Adw.ButtonRow({title: _('Reset to Defaults')});

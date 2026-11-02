@@ -19,24 +19,19 @@ export class Thumbnailer {
         this._waiting = new Map(); // uri -> [resolve]
     }
 
-    // Restituisce il percorso della miniatura (o null) — non lancia eccezioni
+    // Restituisce il percorso della miniatura o null
     async lookup(item) {
         if (item.kind !== 'file' || item.isDir || item.isLauncher)
             return null;
         const uri = item.uri;
         const mtime = Number(item.mtime);
         const mime = item.contentType;
-        try {
-            const path = this._factory.lookup(uri, mtime);
-            if (path)
-                return path;
-            if (this._factory.has_valid_failed_thumbnail(uri, mtime))
-                return null;
-            if (!this._factory.can_thumbnail(uri, mime, mtime))
-                return null;
-        } catch {
+        const path = this._factory.lookup(uri, mtime);
+        if (path)
+            return path;
+        if (this._factory.has_valid_failed_thumbnail(uri, mtime) ||
+            !this._factory.can_thumbnail(uri, mime, mtime))
             return null;
-        }
         return new Promise(resolve => {
             const key = `${uri}@${mtime}`;
             if (this._waiting.has(key)) {
@@ -66,7 +61,7 @@ export class Thumbnailer {
                 this._factory.create_failed_thumbnail_async(job.uri, job.mtime, null)
                     .catch(() => {});
             }
-            for (const resolve of this._waiting.get(job.key) ?? [])
+            for (const resolve of this._waiting.get(job.key))
                 resolve(path);
             this._waiting.delete(job.key);
         }

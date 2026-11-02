@@ -45,8 +45,9 @@ export class DesktopController {
         this.thumbnailer = new Thumbnailer();
         this._store = new PositionStore();
         this._clipboard = new Clipboard(() => this._syncCut());
-        this._model = new DesktopModel(settings, items => this._onModelChanged(items));
-        this._model.onRename = (oldName, newName) => this._onRenamed(oldName, newName);
+        this._model = new DesktopModel(settings,
+            items => this._onModelChanged(items),
+            (oldName, newName) => this._onRenamed(oldName, newName));
 
         this.windows = [];
         this._widgets = new Map();   // id -> FileItem
@@ -60,6 +61,9 @@ export class DesktopController {
         this._drag = null;
         this._dropHighlight = null;
         this._bandBase = null;
+        this._bandToggle = false;
+        this._incoming = null;
+        this._lastDropAction = null;
     }
 
     start() {
@@ -94,8 +98,6 @@ export class DesktopController {
         this._model.destroy();
     }
 
-    // ---------------------------------------------------------------- setup
-
     _loadCss() {
         const provider = new Gtk.CssProvider();
         const [file] = GLib.filename_from_uri(import.meta.url);
@@ -126,7 +128,6 @@ export class DesktopController {
                     console.error(`DeskIcons: action ${name}: ${e.message}`));
             });
             this._actions.add_action(action);
-            return action;
         };
 
         // Elementi selezionati
@@ -169,20 +170,13 @@ export class DesktopController {
             this._actions.add_action(this.settings.create_action(key));
 
         // Esposte anche a livello di applicazione per l'indicatore della Shell
-        for (const name of ['arrange', 'new-folder', 'select-all', 'paste'])
+        for (const name of ['arrange', 'new-folder'])
             this.app.add_action(this._actions.lookup_action(name));
-        const refresh = new Gio.SimpleAction({name: 'refresh'});
-        refresh.connect('activate', () => this._model.reload());
-        this.app.add_action(refresh);
     }
 
     _enable(name, enabled) {
-        const action = this._actions.lookup_action(name);
-        if (action instanceof Gio.SimpleAction)
-            action.set_enabled(enabled);
+        this._actions.lookup_action(name).set_enabled(enabled);
     }
-
-    // --------------------------------------------------------------- modello
 
     _onModelChanged(items) {
         this._store.prune(new Set([...items.keys()].filter(id => id.startsWith('file:'))));
@@ -231,7 +225,6 @@ export class DesktopController {
     _grids() {
         return this.windows.map(win => ({
             monitor: win.monitor.index,
-            window: win,
             geometry: new GridGeometry(win.gridWidth, win.gridHeight, this.settings),
         }));
     }
@@ -264,8 +257,6 @@ export class DesktopController {
             this._store.set(id, pos);
         this.relayout();
     }
-
-    // ------------------------------------------------------------ selezione
 
     _setSelection(ids) {
         this._selection = new Set(ids);
@@ -350,7 +341,7 @@ export class DesktopController {
         }
     }
 
-    onItemReleased(win, widget, button, nPress, state) {
+    onItemReleased(widget, button, nPress, state) {
         if (button !== Gdk.BUTTON_PRIMARY)
             return;
         const id = widget.item.id;
@@ -389,7 +380,7 @@ export class DesktopController {
         }
     }
 
-    onRubberBandBegin(win, state) {
+    onRubberBandBegin(state) {
         const additive = has(state, Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK);
         this._bandBase = additive ? new Set(this._selection) : new Set();
         this._bandToggle = has(state, Gdk.ModifierType.CONTROL_MASK);
@@ -405,8 +396,6 @@ export class DesktopController {
         }
         this._setSelection(sel);
     }
-
-    // ---------------------------------------------------------------- menù
 
     _showBackgroundMenu(win, x, y) {
         this._enable('paste', this._clipboard.canPaste());
@@ -428,8 +417,6 @@ export class DesktopController {
             appsForType = Gio.AppInfo.get_all_for_type([...types][0]).slice(0, 12);
         win.popupMenu(Menus.itemMenu({items, single, appsForType}), x, y);
     }
-
-    // ------------------------------------------------------------- tastiera
 
     onKeyPressed(win, keyval, state) {
         const ctrl = has(state, Gdk.ModifierType.CONTROL_MASK);
@@ -470,10 +457,10 @@ export class DesktopController {
             return this._keyboardMenu(win);
         case Gdk.KEY_F10:
             return shift && this._keyboardMenu(win);
-        case Gdk.KEY_Left: return this._moveFocus(win, -1, 0, shift);
-        case Gdk.KEY_Right: return this._moveFocus(win, 1, 0, shift);
-        case Gdk.KEY_Up: return this._moveFocus(win, 0, -1, shift);
-        case Gdk.KEY_Down: return this._moveFocus(win, 0, 1, shift);
+        case Gdk.KEY_Left: return this._moveFocus(-1, 0, shift);
+        case Gdk.KEY_Right: return this._moveFocus(1, 0, shift);
+        case Gdk.KEY_Up: return this._moveFocus(0, -1, shift);
+        case Gdk.KEY_Down: return this._moveFocus(0, 1, shift);
         }
         return false;
     }
@@ -488,7 +475,7 @@ export class DesktopController {
         return true;
     }
 
-    _moveFocus(win, dx, dy, extend) {
+    _moveFocus(dx, dy, extend) {
         const current = this._anchor && this._layout.has(this._anchor) ? this._anchor : null;
         if (!current) {
             const first = [...this._layout.keys()][0];
@@ -525,8 +512,6 @@ export class DesktopController {
         return true;
     }
 
-    // --------------------------------------------------------- drag & drop
-
     onDragPrepare(widget, x, y) {
         const id = widget.item.id;
         if (!this._selection.has(id)) {
@@ -548,7 +533,7 @@ export class DesktopController {
     }
 
     _isInternal(drop) {
-        return !!(drop?.get_drag() && this._drag);
+        return !!(drop.get_drag() && this._drag);
     }
 
     // File trasportati da un drop: noti subito se il drag è nostro,
@@ -722,8 +707,6 @@ export class DesktopController {
     }
 
     _hintAt(win, x, y, ids) {
-        if (!win)
-            return;
         const geometry = new GridGeometry(win.gridWidth, win.gridHeight, this.settings);
         const [c, r] = geometry.pixelToCell(x - geometry.itemWidth / 2, y - geometry.itemHeight / 3);
         ids.forEach((id, i) => {
@@ -740,19 +723,15 @@ export class DesktopController {
         return p;
     }
 
-    // ------------------------------------------------------------- azioni
-
     async _openItem(item) {
-        const ctx = launchContext();
         if (item.isLauncher) {
             await this._launch(item);
             return;
         }
         if (item.kind === 'file' && !item.isDir) {
-            await Gio.AppInfo.launch_default_for_uri_async(item.uri, ctx, null);
+            await Gio.AppInfo.launch_default_for_uri_async(item.uri, launchContext(), null);
             return;
         }
-        // Cartelle, Home, Cestino, unità
         await FileOps.showFolders([item.uri]);
     }
 

@@ -16,6 +16,7 @@ import {DesktopController} from './desktopController.js';
 import {initTranslations} from './i18n.js';
 
 const SCHEMA_ID = 'org.gnome.shell.extensions.deskicons';
+const SIGTERM = 15;
 
 function parseArgs(argv) {
     const args = {debug: false, extensionDir: null, monitors: null};
@@ -38,10 +39,9 @@ function parseArgs(argv) {
 // Lo schema viene compilato da `make schemas` o, per le installazioni da
 // extensions.gnome.org, dalla Shell stessa al momento dell'installazione
 function loadSettings(extensionDir) {
-    const schemaDir = GLib.build_filenamev([extensionDir ?? '', 'schemas']);
+    const schemaDir = GLib.build_filenamev([extensionDir, 'schemas']);
     let source = Gio.SettingsSchemaSource.get_default();
-    if (extensionDir && GLib.file_test(GLib.build_filenamev([schemaDir, 'gschemas.compiled']),
-        GLib.FileTest.EXISTS))
+    if (GLib.file_test(GLib.build_filenamev([schemaDir, 'gschemas.compiled']), GLib.FileTest.EXISTS))
         source = Gio.SettingsSchemaSource.new_from_directory(schemaDir, source, false);
     const schema = source.lookup(SCHEMA_ID, true);
     if (!schema)
@@ -49,15 +49,10 @@ function loadSettings(extensionDir) {
     return new Gio.Settings({settings_schema: schema});
 }
 
-// In modalità debug si usano i monitor reali visti da GDK
+// In modalità debug c'è una sola finestra, grande come il primo monitor
 function debugMonitors() {
-    const list = Gdk.Display.get_default().get_monitors();
-    const result = [];
-    for (let i = 0; i < list.get_n_items(); i++) {
-        const geo = list.get_item(i).get_geometry();
-        result.push({index: i, primary: i === 0, width: geo.width, height: geo.height});
-    }
-    return result.slice(0, 1);
+    const geo = Gdk.Display.get_default().get_monitors().get_item(0).get_geometry();
+    return [{index: 0, primary: true, width: geo.width, height: geo.height}];
 }
 
 const args = parseArgs(System.programArgs);
@@ -77,11 +72,12 @@ app.connect('startup', () => {
     controller = new DesktopController(app, settings, monitors, args.debug);
     controller.start();
 });
+// GApplication lo richiede, ma le finestre si aprono già in 'startup'
 app.connect('activate', () => {});
-app.connect('shutdown', () => controller?.shutdown());
+app.connect('shutdown', () => controller.shutdown());
 
 // Termina in modo pulito su SIGTERM (disabilitazione dell'estensione)
-GLibUnix.signal_add(GLib.PRIORITY_DEFAULT, 15, () => {
+GLibUnix.signal_add(GLib.PRIORITY_DEFAULT, SIGTERM, () => {
     app.quit();
     return GLib.SOURCE_REMOVE;
 });

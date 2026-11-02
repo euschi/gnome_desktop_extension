@@ -14,16 +14,16 @@ import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
-export const HELPER_BUS_NAME = 'it.eugenio.DeskIcons';
-export const HELPER_OBJECT_PATH = '/it/eugenio/DeskIcons';
+const HELPER_BUS_NAME = 'it.eugenio.DeskIcons';
+const HELPER_OBJECT_PATH = '/it/eugenio/DeskIcons';
 
 export const DeskIconsIndicator = GObject.registerClass(
 class DeskIconsIndicator extends PanelMenu.Button {
-    _init(extension, manager) {
+    _init(extension, manager, settings) {
         super._init(0.0, _('Desktop Icons'));
         this._extension = extension;
         this._manager = manager;
-        this._settings = extension.getSettings();
+        this._settings = settings;
 
         this.add_child(new St.Icon({
             icon_name: 'user-desktop-symbolic',
@@ -51,19 +51,12 @@ class DeskIconsIndicator extends PanelMenu.Button {
             this._settings.set_boolean('keep-arranged', state));
         menu.addMenuItem(arranged);
 
-        this._settingsIds = [
-            this._settings.connect('changed::icons-visible', () =>
-                visible.setToggleState(this._settings.get_boolean('icons-visible'))),
-            this._settings.connect('changed::keep-arranged', () =>
-                arranged.setToggleState(this._settings.get_boolean('keep-arranged'))),
-        ];
-
         menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 
         menu.addAction(_('Arrange Icons'), () => this._activate('arrange'));
 
         const sort = new PopupMenu.PopupSubMenuMenuItem(_('Sort By'));
-        const sortItems = [];
+        const sortItems = new Map();
         const sortOptions = [
             ['name', _('Name')],
             ['modified', _('Modification Date')],
@@ -78,18 +71,23 @@ class DeskIconsIndicator extends PanelMenu.Button {
                 else
                     this._settings.set_string('sort-by', key);
             });
-            item._sortKey = key;
-            sortItems.push(item);
+            sortItems.set(key, item);
         }
         const updateSort = () => {
             const current = this._settings.get_string('sort-by');
-            for (const item of sortItems) {
-                item.setOrnament(item._sortKey === current
+            for (const [key, item] of sortItems) {
+                item.setOrnament(key === current
                     ? PopupMenu.Ornament.CHECK : PopupMenu.Ornament.NONE);
             }
         };
         updateSort();
-        this._settingsIds.push(this._settings.connect('changed::sort-by', updateSort));
+        this._settings.connectObject(
+            'changed::icons-visible', () =>
+                visible.setToggleState(this._settings.get_boolean('icons-visible')),
+            'changed::keep-arranged', () =>
+                arranged.setToggleState(this._settings.get_boolean('keep-arranged')),
+            'changed::sort-by', updateSort,
+            this);
         menu.addMenuItem(sort);
 
         menu.addAction(_('New Folder'), () => this._activate('new-folder'));
@@ -101,12 +99,8 @@ class DeskIconsIndicator extends PanelMenu.Button {
         menu.addAction(_('Settings…'), () => this._extension.openPreferences());
     }
 
-    _activate(name, param = null) {
-        try {
-            this._actions.activate_action(name, param);
-        } catch (e) {
-            logError(e, `DeskIcons: action ${name}`);
-        }
+    _activate(name) {
+        this._actions.activate_action(name, null);
     }
 
     _openDesktopFolder() {
@@ -117,12 +111,5 @@ class DeskIconsIndicator extends PanelMenu.Button {
             'org.freedesktop.FileManager1', 'ShowFolders',
             new GLib.Variant('(ass)', [[Gio.File.new_for_path(dir).get_uri()], '']),
             null, Gio.DBusCallFlags.NONE, -1, null, null);
-    }
-
-    destroy() {
-        for (const id of this._settingsIds ?? [])
-            this._settings.disconnect(id);
-        this._settingsIds = null;
-        super.destroy();
     }
 });

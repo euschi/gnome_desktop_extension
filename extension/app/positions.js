@@ -38,13 +38,6 @@ export class PositionStore {
         this._scheduleSave();
     }
 
-    delete(id) {
-        if (id in this._data) {
-            delete this._data[id];
-            this._scheduleSave();
-        }
-    }
-
     rename(oldId, newId) {
         if (oldId in this._data) {
             this._data[newId] = this._data[oldId];

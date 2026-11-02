@@ -128,12 +128,11 @@ export function sortItems(items, settings) {
 //  hints: Map id -> {m, c, r} posizioni richieste per nuovi elementi
 // Restituisce Map id -> {m, c, r, x, y}
 export function computeLayout(grids, items, store, settings, hints) {
-    const result = new Map();
-    if (!grids.length)
-        return result;
+    if (settings.get_boolean('keep-arranged'))
+        return arrangedLayout(grids, items, settings);
 
+    const result = new Map();
     const snap = settings.get_boolean('snap-to-grid');
-    const arranged = settings.get_boolean('keep-arranged');
     const occupied = new Map(grids.map(g => [g.monitor, new Set()]));
     const gridOf = m => grids.find(g => g.monitor === m);
     const key = (c, r) => `${Math.round(c)},${Math.round(r)}`;
@@ -141,7 +140,7 @@ export function computeLayout(grids, items, store, settings, hints) {
     const place = (item, m, c, r, save) => {
         const g = gridOf(m);
         [c, r] = g.geometry.clamp(c, r);
-        if (snap || arranged) {
+        if (snap) {
             c = Math.round(c);
             r = Math.round(r);
         }
@@ -167,8 +166,21 @@ export function computeLayout(grids, items, store, settings, hints) {
         return [g.monitor, c, r];
     };
 
-    if (arranged)
-        return arrangedLayout(grids, items, settings);
+    const nearestFree = hint => {
+        if (!hint || !gridOf(hint.m))
+            return firstFree();
+        const g = gridOf(hint.m);
+        const occ = occupied.get(hint.m);
+        let best = null;
+        for (const [c, r] of g.geometry.orderedCells()) {
+            if (occ.has(key(c, r)))
+                continue;
+            const d = (c - hint.c) ** 2 + (r - hint.r) ** 2;
+            if (!best || d < best[0])
+                best = [d, c, r];
+        }
+        return best ? [hint.m, best[1], best[2]] : firstFree();
+    };
 
     const pending = [];
     // 1) suggerimenti espliciti (drop, nuova cartella nel punto cliccato):
@@ -203,22 +215,6 @@ export function computeLayout(grids, items, store, settings, hints) {
         place(item, m, c, r, !store.get(item.id) || gridOf(store.get(item.id).m) !== undefined);
     }
     return result;
-
-    function nearestFree(hint) {
-        if (!hint || !gridOf(hint.m))
-            return firstFree();
-        const g = gridOf(hint.m);
-        const occ = occupied.get(hint.m);
-        let best = null;
-        for (const [c, r] of g.geometry.orderedCells()) {
-            if (occ.has(key(c, r)))
-                continue;
-            const d = (c - hint.c) ** 2 + (r - hint.r) ** 2;
-            if (!best || d < best[0])
-                best = [d, c, r];
-        }
-        return best ? [hint.m, best[1], best[2]] : firstFree();
-    }
 }
 
 // Disposizione ordinata: celle consecutive secondo l'ordinamento scelto,
