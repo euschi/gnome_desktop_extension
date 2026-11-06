@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // SPDX-FileCopyrightText: 2026 Eugenio Schintu
 
-// Widget di una singola icona: immagine (icona o miniatura), emblemi ed
-// etichetta. Il drag delle icone parte da qui; selezione e azioni sono
-// gestite dal DesktopController.
+// Widget for a single icon: image (icon or thumbnail), emblems and label.
+// Icon dragging starts here; selection and actions are handled by the
+// DesktopController.
 
 import GObject from 'gi://GObject';
 import GLib from 'gi://GLib';
@@ -70,7 +70,7 @@ class FileItem extends Gtk.Box {
         this.set_size_request(size.width, size.height);
         this._image.set_pixel_size(size.icon);
         this._label.set_lines(size.lines);
-        // Limita la larghezza naturale dell'etichetta alla larghezza dell'icona
+        // Limit the label's natural width to the icon width
         this._label.set_max_width_chars(Math.max(6, Math.floor((size.width - 8) / 7)));
         this._label.set_size_request(size.width - 8, -1);
         this._showThumbs = settings.get_boolean('show-thumbnails');

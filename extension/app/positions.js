@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // SPDX-FileCopyrightText: 2026 Eugenio Schintu
 
-// Persistenza delle posizioni delle icone in un file JSON.
-// Le posizioni sono in coordinate di griglia (anche frazionarie quando
-// l'allineamento alla griglia è disattivato) per restare coerenti quando
-// cambia la dimensione delle icone.
+// Persistence of icon positions in a JSON file.
+// Positions are in grid coordinates (fractional too when grid alignment is
+// disabled) so they stay consistent when the icon size changes.
 
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
@@ -46,7 +45,7 @@ export class PositionStore {
         }
     }
 
-    // Rimuove le posizioni di file della Scrivania che non esistono più
+    // Removes positions of Desktop files that no longer exist
     prune(existingIds) {
         let changed = false;
         for (const id of Object.keys(this._data)) {

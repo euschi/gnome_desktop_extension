@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // SPDX-FileCopyrightText: 2026 Eugenio Schintu
 
-// Finestra trasparente che copre l'area di lavoro di un monitor. La Shell la
-// riconosce dal titolo "@deskicons:<monitor>" e la rende finestra desktop.
+// Transparent window covering a monitor's work area. The Shell recognizes it
+// by the title "@deskicons:<monitor>" and turns it into a desktop window.
 
 import GObject from 'gi://GObject';
 import GLib from 'gi://GLib';
@@ -23,7 +23,7 @@ const DesktopGrid = GObject.registerClass({
         super.vfunc_size_allocate(width, height, baseline);
         if (width !== this._lastSize[0] || height !== this._lastSize[1]) {
             this._lastSize = [width, height];
-            // Fuori dal ciclo di allocazione: il relayout sposta i figli
+            // Outside the allocation cycle: relayout moves the children
             GLib.idle_add(GLib.PRIORITY_DEFAULT, () => {
                 this.emit('resized');
                 return GLib.SOURCE_REMOVE;
@@ -113,7 +113,7 @@ class DesktopWindow extends Gtk.ApplicationWindow {
             }
             startX = x;
             startY = y;
-            // Il rettangolo va disegnato sopra le icone
+            // The rectangle must be drawn above the icons
             if (this.grid.get_last_child() !== this._band)
                 this._band.insert_before(this.grid, null);
             this._controller.onRubberBandBegin(gesture.get_current_event_state());
@@ -136,7 +136,7 @@ class DesktopWindow extends Gtk.ApplicationWindow {
     }
 
     _setupDrop() {
-        // DropTargetAsync + text/uri-list: gjs non sa gestire Gdk.FileList nei GValue
+        // DropTargetAsync + text/uri-list: gjs cannot handle Gdk.FileList in GValues
         const target = new Gtk.DropTargetAsync({
             actions: Gdk.DragAction.COPY | Gdk.DragAction.MOVE | Gdk.DragAction.LINK,
             formats: Gdk.ContentFormats.new(['text/uri-list']),

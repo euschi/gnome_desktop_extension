@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // SPDX-FileCopyrightText: 2026 Eugenio Schintu
 
-// Appunti compatibili con Nautilus: formato x-special/gnome-copied-files
-// ("copy"/"cut" + URI), più text/uri-list e testo semplice.
+// Nautilus-compatible clipboard: x-special/gnome-copied-files format
+// ("copy"/"cut" + URIs), plus text/uri-list and plain text.
 
 import GLib from 'gi://GLib';
 import Gdk from 'gi://Gdk?version=4.0';
@@ -48,7 +48,7 @@ export class Clipboard {
         return parseUriList(await readStreamToString(stream));
     }
 
-    // Restituisce {uris, cut} oppure null
+    // Returns {uris, cut} or null
     async read() {
         const formats = this._clipboard.get_formats();
         try {

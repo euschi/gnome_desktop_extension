@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // SPDX-FileCopyrightText: 2026 Eugenio Schintu
 
-// Traduzioni dell'helper. Gira in un processo separato dalla Shell, quindi
-// lega da sé il dominio gettext alla cartella locale/ dell'estensione (come
-// fa ExtensionBase.initTranslations per extension.js e prefs.js).
+// Helper translations. It runs in a separate process from the Shell, so it
+// binds the gettext domain to the extension's locale/ folder by itself (as
+// ExtensionBase.initTranslations does for extension.js and prefs.js).
 
 import GLib from 'gi://GLib';
 import Gettext from 'gettext';

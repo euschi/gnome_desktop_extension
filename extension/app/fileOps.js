@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // SPDX-FileCopyrightText: 2026 Eugenio Schintu
 
-// Operazioni sui file delegate a Nautilus (org.gnome.Nautilus.FileOperations2)
-// così da avere finestre di avanzamento, gestione conflitti e annulla/ripeti
-// condivisi con il file manager. Se Nautilus non è disponibile si usa Gio, tranne
-// per le operazioni senza un equivalente sicuro (eliminazione definitiva, cestino
-// da svuotare, annulla/ripeti).
+// File operations delegated to Nautilus (org.gnome.Nautilus.FileOperations2)
+// so that progress windows, conflict handling and undo/redo are shared with
+// the file manager. If Nautilus is unavailable, Gio is used, except for
+// operations with no safe equivalent (permanent deletion, emptying the trash,
+// undo/redo).
 
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
@@ -15,8 +15,8 @@ const NAUTILUS = ['org.gnome.Nautilus', '/org/gnome/Nautilus/FileOperations2',
 const FILE_MANAGER = ['org.freedesktop.FileManager1', '/org/freedesktop/FileManager1',
     'org.freedesktop.FileManager1'];
 
-// Solo in questi casi l'operazione non è mai partita e si può ripiegare su Gio. Un
-// errore dell'operazione stessa non deve farla ripetere da un'altra parte.
+// Only in these cases the operation never started and it is safe to fall back
+// to Gio. An error from the operation itself must not be retried elsewhere.
 const NAUTILUS_UNAVAILABLE = [
     Gio.DBusError.SERVICE_UNKNOWN, Gio.DBusError.NAME_HAS_NO_OWNER,
     Gio.DBusError.UNKNOWN_METHOD, Gio.DBusError.SPAWN_EXEC_FAILED,
@@ -36,8 +36,8 @@ function call([name, path, iface], method, params, timeout = -1) {
         null, Gio.DBusCallFlags.NONE, timeout, null);
 }
 
-// Senza timeout: la risposta può arrivare solo a operazione conclusa e, nel
-// frattempo, Nautilus può essere in attesa di una scelta dell'utente
+// No timeout: the reply may arrive only once the operation has finished and,
+// in the meantime, Nautilus may be waiting for a choice from the user
 async function nautilus(method, signature, args, fallback = null) {
     try {
         await call(NAUTILUS, method, new GLib.Variant(signature, [...args, platformData()]),
@@ -95,7 +95,7 @@ export function redo() {
     return nautilus('Redo', '(a{sv})', []);
 }
 
-// 0 = niente da annullare, 1 = annulla disponibile, 2 = ripeti disponibile
+// 0 = nothing to undo, 1 = undo available, 2 = redo available
 export function undoStatus() {
     try {
         const res = Gio.DBus.session.call_sync(NAUTILUS[0], NAUTILUS[1],
@@ -120,7 +120,7 @@ export function showProperties(uris) {
     return call(FILE_MANAGER, 'ShowItemProperties', new GLib.Variant('(ass)', [uris, ''])).catch(logErr);
 }
 
-// Non passa da Nautilus: CopyURIs non permette di scegliere il nome di destinazione
+// Does not go through Nautilus: CopyURIs cannot choose the destination name
 export function copyTemplate(templateFile, destFile) {
     return templateFile.copy_async(destFile, Gio.FileCopyFlags.NONE,
         GLib.PRIORITY_DEFAULT, null, null);

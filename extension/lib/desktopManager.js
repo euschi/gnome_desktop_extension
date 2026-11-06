@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // SPDX-FileCopyrightText: 2026 Eugenio Schintu
 
-// Avvia il processo helper GTK4 come client Wayland "fidato" e trasforma le
-// sue finestre in finestre desktop: sotto tutte le altre, su tutti i
-// workspace, fuori da Alt-Tab/overview, posizionate sull'area di lavoro di
-// ciascun monitor.
+// Starts the GTK4 helper process as a "trusted" Wayland client and turns its
+// windows into desktop windows: below all others, on all workspaces, hidden
+// from Alt-Tab/overview, and placed on each monitor's work area.
 
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
@@ -26,7 +25,7 @@ export class DesktopManager {
         this._client = null;
         this._subprocess = null;
         this._cancellable = null;
-        this._windows = new Map(); // MetaWindow -> monitor (null finché non è noto)
+        this._windows = new Map(); // MetaWindow -> monitor (null until known)
         this._monitors = [];
         this._crashes = [];
         this._restartId = 0;
@@ -72,7 +71,7 @@ export class DesktopManager {
                 x: wa.x, y: wa.y, width: wa.width, height: wa.height,
             });
         }
-        // Il primario per primo: è lì che vanno le nuove icone
+        // Primary first: that is where new icons go
         list.sort((a, b) => (b.primary - a.primary) || (a.x - b.x) || (a.y - b.y));
         return list;
     }
@@ -110,7 +109,7 @@ export class DesktopManager {
             try {
                 proc.wait_finish(res);
             } catch {
-                return; // cancellato da _kill()
+                return; // cancelled by _kill()
             }
             if (this._client !== client)
                 return;
@@ -120,7 +119,7 @@ export class DesktopManager {
             this._onHelperExited(proc);
         });
 
-        // Le finestre potrebbero già esistere (es. riavvio rapido)
+        // The windows may already exist (e.g. quick restart)
         for (const actor of global.get_window_actors())
             this._onWindowCreated(actor.get_meta_window());
     }
@@ -128,7 +127,7 @@ export class DesktopManager {
     _onHelperExited(proc) {
         const status = proc.get_if_exited() ? proc.get_exit_status() : -1;
         if (status === 0)
-            return; // uscita volontaria
+            return; // voluntary exit
 
         const now = GLib.get_monotonic_time();
         this._crashes = this._crashes.filter(t => now - t < CRASH_WINDOW_US);
@@ -201,7 +200,7 @@ export class DesktopManager {
     }
 
     _placeAll() {
-        // L'area di lavoro può cambiare (pannelli, dock): aggiorna geometrie
+        // The work area may change (panels, docks): update geometries
         const fresh = this._computeMonitors();
         for (const m of this._monitors) {
             const f = fresh.find(n => n.index === m.index);
