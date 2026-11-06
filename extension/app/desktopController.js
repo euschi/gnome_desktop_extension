@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // SPDX-FileCopyrightText: 2026 Eugenio Schintu
 
-// Coordina modello, finestre, selezione, drag & drop, menù e azioni.
+// Coordinates model, windows, selection, drag & drop, menus and actions.
 
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
@@ -130,7 +130,7 @@ export class DesktopController {
             this._actions.add_action(action);
         };
 
-        // Elementi selezionati
+        // Selected items
         add('open', () => this._openSelection());
         add('open-with', id => this._openWith(id), 's');
         add('allow-launch', () => this._selectedItems().forEach(i => this._setTrusted(i)));
@@ -153,7 +153,7 @@ export class DesktopController {
         add('eject', () => this._unmount(true));
         add('unmount', () => this._unmount(false));
 
-        // Sfondo
+        // Background
         add('new-folder', () => this.newFolder());
         add('new-from-template', path => this._newFromTemplate(path), 's');
         add('paste', () => this._paste());
@@ -169,7 +169,7 @@ export class DesktopController {
         for (const key of SETTINGS_ACTIONS)
             this._actions.add_action(this.settings.create_action(key));
 
-        // Esposte anche a livello di applicazione per l'indicatore della Shell
+        // Also exposed at application level for the Shell indicator
         for (const name of ['arrange', 'new-folder'])
             this.app.add_action(this._actions.lookup_action(name));
     }
@@ -250,7 +250,7 @@ export class DesktopController {
         }
     }
 
-    // "Disponi icone": ordina e salva le nuove posizioni
+    // "Arrange icons": sorts and saves the new positions
     arrange() {
         const layout = arrangedLayout(this._grids(), [...this._model.items.values()], this.settings);
         for (const [id, pos] of layout)
@@ -327,8 +327,8 @@ export class DesktopController {
                 this._setSelection([id]);
                 this._anchor = id;
             } else {
-                // Potrebbe essere l'inizio di un drag della selezione multipla:
-                // la riduzione alla singola icona avviene al rilascio
+                // This could be the start of a multi-selection drag:
+                // reducing to the single icon happens on release
                 this._pendingSingle = id;
                 this._anchor = id;
             }
@@ -525,7 +525,7 @@ export class DesktopController {
     }
 
     onDragEnd() {
-        // Il drop (se interno) è già stato gestito
+        // The drop (if internal) has already been handled
         GLib.idle_add(GLib.PRIORITY_DEFAULT, () => {
             this._drag = null;
             return GLib.SOURCE_REMOVE;
@@ -536,8 +536,8 @@ export class DesktopController {
         return !!(drop.get_drag() && this._drag);
     }
 
-    // File trasportati da un drop: noti subito se il drag è nostro,
-    // altrimenti letti (una volta per drop) dal formato text/uri-list
+    // Files carried by a drop: known immediately if the drag is ours,
+    // otherwise read (once per drop) from the text/uri-list format
     _dropFiles(drop) {
         if (this._isInternal(drop))
             return this._drag.files;
@@ -549,7 +549,7 @@ export class DesktopController {
         return parseUriList(await readStreamToString(stream)).map(u => Gio.File.new_for_uri(u));
     }
 
-    // Elemento su cui si può rilasciare (cartella, cestino, lanciatore)
+    // Item that can accept a drop (folder, trash, launcher)
     _dropTargetAt(win, drop, x, y) {
         const widget = win.itemAt(x, y);
         if (!widget || !widget.isDropTarget)
@@ -567,8 +567,8 @@ export class DesktopController {
         widget?.setDropHighlight(true);
     }
 
-    // Azione predefinita come Nautilus: spostamento sullo stesso filesystem,
-    // copia altrimenti (Ctrl/Shift sono gestiti dalla sorgente del drag)
+    // Default action like Nautilus: move on the same filesystem,
+    // copy otherwise (Ctrl/Shift are handled by the drag source)
     _defaultAction(files, destFile) {
         if (!files?.length)
             return Gdk.DragAction.COPY;
@@ -666,7 +666,7 @@ export class DesktopController {
             return true;
         }
 
-        // File provenienti da un'altra applicazione
+        // Files coming from another application
         const desktopUri = this._model.dir.get_uri();
         const incoming = files.filter(f => f.get_parent()?.get_uri() !== desktopUri);
         if (!incoming.length)
@@ -695,7 +695,7 @@ export class DesktopController {
                 continue;
             let dx = pos.x - origin.x, dy = pos.y - origin.y;
             if (pos.m !== origin.m) {
-                // Elementi selezionati su un altro monitor: accodali
+                // Items selected on another monitor: queue them
                 stray++;
                 dx = stray * geometry.cellWidth;
                 dy = 0;
@@ -870,7 +870,7 @@ export class DesktopController {
         await FileOps.copyTemplate(template, this._model.dir.get_child(name));
     }
 
-    // Dialogo di conferma; con `okLabel` null è solo informativo
+    // Confirmation dialog; with a null `okLabel` it is informational only
     _confirm(heading, body, okLabel, appearance = Adw.ResponseAppearance.DEFAULT) {
         return new Promise(resolve => {
             const dialog = new Adw.AlertDialog({heading, body});

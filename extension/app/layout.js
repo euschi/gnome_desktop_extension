@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // SPDX-FileCopyrightText: 2026 Eugenio Schintu
 
-// Geometria della griglia di un monitor e algoritmo di posizionamento delle
-// icone (posizioni salvate, nuove icone, "mantieni ordinate").
+// Grid geometry of a monitor and the icon placement algorithm (saved
+// positions, new icons, "keep arranged").
 
 import Gio from 'gi://Gio';
 
@@ -36,7 +36,7 @@ export class GridGeometry {
         this.cols = Math.max(1, Math.floor(availW / this.cellWidth));
         this.rows = Math.max(1, Math.floor(availH / this.cellHeight));
 
-        // Lo spazio avanzato va dal lato opposto all'angolo di partenza
+        // The leftover space goes on the side opposite the starting corner
         const corner = settings.get_string('start-corner');
         const extraW = Math.max(0, availW - this.cols * this.cellWidth);
         const extraH = Math.max(0, availH - this.rows * this.cellHeight);
@@ -63,7 +63,7 @@ export class GridGeometry {
         return [Math.min(Math.max(0, c), maxC), Math.min(Math.max(0, r), maxR)];
     }
 
-    // Celle nell'ordine di riempimento definito dalle impostazioni
+    // Cells in the fill order defined by the settings
     *orderedCells() {
         const rightToLeft = this.corner.endsWith('right');
         const bottomToTop = this.corner.startsWith('bottom');
@@ -108,7 +108,7 @@ export function sortItems(items, settings) {
     };
 
     return [...items].sort((a, b) => {
-        // Gli elementi speciali restano sempre in testa
+        // Special items always stay first
         if (a.isSpecial || b.isSpecial) {
             if (a.isSpecial && b.isSpecial)
                 return SPECIAL_ORDER[a.kind] - SPECIAL_ORDER[b.kind];
@@ -121,12 +121,12 @@ export function sortItems(items, settings) {
     });
 }
 
-// Calcola la posizione di ogni elemento.
-//  grids: [{monitor, geometry}] nell'ordine di preferenza (primario per primo)
-//  items: DesktopItem[] (ordine di arrivo)
+// Computes the position of each item.
+//  grids: [{monitor, geometry}] in order of preference (primary first)
+//  items: DesktopItem[] (arrival order)
 //  store: PositionStore
-//  hints: Map id -> {m, c, r} posizioni richieste per nuovi elementi
-// Restituisce Map id -> {m, c, r, x, y}
+//  hints: Map id -> {m, c, r} requested positions for new items
+// Returns Map id -> {m, c, r, x, y}
 export function computeLayout(grids, items, store, settings, hints) {
     if (settings.get_boolean('keep-arranged'))
         return arrangedLayout(grids, items, settings);
@@ -159,7 +159,7 @@ export function computeLayout(grids, items, store, settings, hints) {
                     return [g.monitor, c, r];
             }
         }
-        // Desktop pieno: sovrapponi sull'ultima cella del primario
+        // Desktop full: overlap on the primary's last cell
         const g = grids[0];
         const cells = [...g.geometry.orderedCells()];
         const [c, r] = cells[cells.length - 1];
@@ -183,9 +183,9 @@ export function computeLayout(grids, items, store, settings, hints) {
     };
 
     const pending = [];
-    // 1) suggerimenti espliciti (drop, nuova cartella nel punto cliccato):
-    //    hanno la precedenza sulle celle occupate
-    // 2) posizioni salvate
+    // 1) explicit hints (drop, new folder at the clicked point):
+    //    take precedence over occupied cells
+    // 2) saved positions
     const ordered = [
         ...items.filter(i => hints.has(i.id)),
         ...items.filter(i => !hints.has(i.id)),
@@ -207,8 +207,8 @@ export function computeLayout(grids, items, store, settings, hints) {
             hints.delete(item.id);
     }
 
-    // 3) nuovi elementi nella prima cella libera; le posizioni salvate
-    //    riferite a monitor assenti non vengono sovrascritte
+    // 3) new items in the first free cell; saved positions referring to
+    //    absent monitors are not overwritten
     for (const item of pending) {
         const [m, c, r] = nearestFree(hints.get(item.id) ?? store.get(item.id));
         hints.delete(item.id);
@@ -217,8 +217,8 @@ export function computeLayout(grids, items, store, settings, hints) {
     return result;
 }
 
-// Disposizione ordinata: celle consecutive secondo l'ordinamento scelto,
-// partendo dal monitor primario
+// Arranged layout: consecutive cells following the chosen sort order,
+// starting from the primary monitor
 export function arrangedLayout(grids, items, settings) {
     const result = new Map();
     const cells = [];

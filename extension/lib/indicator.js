@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // SPDX-FileCopyrightText: 2026 Eugenio Schintu
 
-// Indicatore nel pannello con le azioni rapide sulle icone del desktop.
-// Le azioni che riguardano l'helper vengono invocate tramite le GActions che
-// l'applicazione GTK esporta su D-Bus (org.gtk.Actions).
+// Panel indicator with quick actions on the desktop icons.
+// Actions concerning the helper are invoked through the GActions that the
+// GTK application exports over D-Bus (org.gtk.Actions).
 
 import GObject from 'gi://GObject';
 import Gio from 'gi://Gio';
@@ -65,7 +65,7 @@ class DeskIconsIndicator extends PanelMenu.Button {
         ];
         for (const [key, label] of sortOptions) {
             const item = sort.menu.addAction(label, () => {
-                // Il cambio di impostazione riordina già le icone
+                // Changing the setting already rearranges the icons
                 if (this._settings.get_string('sort-by') === key)
                     this._activate('arrange');
                 else

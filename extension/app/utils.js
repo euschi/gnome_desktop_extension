@@ -41,7 +41,7 @@ export function launchContext() {
     return Gdk.Display.get_default().get_app_launch_context();
 }
 
-// Restituisce un nome non ancora presente in `dir` (es. "Nuova cartella 2")
+// Returns a name not yet present in `dir` (e.g. "New Folder 2")
 export function uniqueName(dir, name) {
     if (!dir.get_child(name).query_exists(null))
         return name;
@@ -120,8 +120,8 @@ function bytesProvider(mime, text) {
         new GLib.Bytes(new TextEncoder().encode(text)));
 }
 
-// Contenuto per drag e appunti: elenco di URI e percorsi come testo semplice,
-// più eventuali formati aggiuntivi ([mime, testo])
+// Content for drag and clipboard: list of URIs and paths as plain text,
+// plus any additional formats ([mime, text])
 export function uriListProvider(files, extraFormats = []) {
     const uris = files.map(f => f.get_uri());
     return Gdk.ContentProvider.new_union([

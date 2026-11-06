@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // SPDX-FileCopyrightText: 2026 Eugenio Schintu
 
-// Miniature dei file tramite GnomeDesktop (stessa cache di Nautilus).
+// File thumbnails via GnomeDesktop (same cache as Nautilus).
 
 import Gio from 'gi://Gio';
 import GnomeDesktop from 'gi://GnomeDesktop?version=4.0';
@@ -19,7 +19,7 @@ export class Thumbnailer {
         this._waiting = new Map(); // uri -> [resolve]
     }
 
-    // Restituisce il percorso della miniatura o null
+    // Returns the thumbnail path or null
     async lookup(item) {
         if (item.kind !== 'file' || item.isDir || item.isLauncher)
             return null;
