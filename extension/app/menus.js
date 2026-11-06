@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // SPDX-FileCopyrightText: 2026 Eugenio Schintu
 
-// Modelli dei menù contestuali. Le voci puntano alle azioni del gruppo "desk"
-// registrato dal DesktopController su ogni finestra.
+// Context menu models. Entries point to the actions of the "desk" group
+// registered by the DesktopController on each window.
 
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
@@ -47,7 +47,7 @@ function templatesMenu() {
             menu.append_item(item(label, 'new-from-template', new GLib.Variant('s', path)));
         }
     } catch {
-        // cartella modelli assente o illeggibile
+        // templates folder missing or unreadable
     }
     return menu;
 }
@@ -101,7 +101,7 @@ export function itemMenu(ctx) {
     const kinds = new Set(items.map(i => i.kind));
     const onlyFiles = kinds.size === 1 && kinds.has('file');
 
-    // Elementi speciali (selezione singola)
+    // Special items (single selection)
     if (single?.kind === 'trash') {
         menu.append_section(null, section(item(_('Open'), 'open')));
         menu.append_section(null, section(item(_('Empty Trash'), 'empty-trash')));

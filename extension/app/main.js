@@ -1,9 +1,10 @@
+#!@GJS@ -m
 // SPDX-License-Identifier: GPL-2.0-or-later
 // SPDX-FileCopyrightText: 2026 Eugenio Schintu
 
-// Helper GTK4 delle icone desktop. Viene avviato dall'estensione con:
+// GTK4 helper for the desktop icons. It is launched by the extension with:
 //   gjs -m main.js --extension-dir DIR --monitors JSON
-// Per lo sviluppo: gjs -m main.js --debug --extension-dir DIR
+// For development: gjs -m main.js --debug --extension-dir DIR
 
 import GLib from 'gi://GLib';
 import GLibUnix from 'gi://GLibUnix';
@@ -36,8 +37,8 @@ function parseArgs(argv) {
     return args;
 }
 
-// Lo schema viene compilato da `make schemas` o, per le installazioni da
-// extensions.gnome.org, dalla Shell stessa al momento dell'installazione
+// The schema is compiled by `make schemas` or, for installations from
+// extensions.gnome.org, by the Shell itself at install time
 function loadSettings(extensionDir) {
     const schemaDir = GLib.build_filenamev([extensionDir, 'schemas']);
     let source = Gio.SettingsSchemaSource.get_default();
@@ -49,7 +50,7 @@ function loadSettings(extensionDir) {
     return new Gio.Settings({settings_schema: schema});
 }
 
-// In modalità debug c'è una sola finestra, grande come il primo monitor
+// In debug mode there is a single window, as large as the first monitor
 function debugMonitors() {
     const geo = Gdk.Display.get_default().get_monitors().get_item(0).get_geometry();
     return [{index: 0, primary: true, width: geo.width, height: geo.height}];
@@ -66,17 +67,17 @@ const app = new Adw.Application({
 
 let controller = null;
 app.connect('startup', () => {
-    // Le finestre desktop non devono mai chiudere l'applicazione
+    // Desktop windows must never quit the application
     app.hold();
     const monitors = args.monitors ?? debugMonitors();
     controller = new DesktopController(app, settings, monitors, args.debug);
     controller.start();
 });
-// GApplication lo richiede, ma le finestre si aprono già in 'startup'
+// GApplication requires it, but the windows are already opened in 'startup'
 app.connect('activate', () => {});
 app.connect('shutdown', () => controller.shutdown());
 
-// Termina in modo pulito su SIGTERM (disabilitazione dell'estensione)
+// Exit cleanly on SIGTERM (extension being disabled)
 GLibUnix.signal_add(GLib.PRIORITY_DEFAULT, SIGTERM, () => {
     app.quit();
     return GLib.SOURCE_REMOVE;

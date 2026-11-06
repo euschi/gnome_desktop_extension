@@ -20,7 +20,7 @@ export default class DeskIconsPreferences extends ExtensionPreferences {
             return false;
         });
 
-        // [valore, etichetta]
+        // [value, label]
         const LABEL_STYLES = [['shadow', _('Shadow')], ['background', _('Dark Background')],
             ['none', _('None')]];
         const CORNERS = [['top-left', _('Top Left')], ['top-right', _('Top Right')],

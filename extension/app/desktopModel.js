@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // SPDX-FileCopyrightText: 2026 Eugenio Schintu
 
-// Elenco degli elementi da mostrare sul desktop: file della cartella Scrivania
-// più gli elementi speciali (Home, Cestino, unità montate). Tiene tutto
-// aggiornato con Gio.FileMonitor / Gio.VolumeMonitor.
+// List of the items to show on the desktop: files in the Desktop folder plus
+// the special items (Home, Trash, mounted drives). Keeps everything up to
+// date with Gio.FileMonitor / Gio.VolumeMonitor.
 
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
