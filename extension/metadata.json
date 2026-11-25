@@ -1,12 +1,12 @@
 {
   "uuid": "deskicons@euschi.github.io",
   "name": "Icone Desktop",
-  "description": "Desktop icons for GNOME on Wayland, in the style of DING.\n\n* Shows the contents of the Desktop folder, plus optional Home, Trash and mounted drives\n* Multiple selection (Ctrl/Shift click, rubber band) and free or grid-aligned positioning\n* Drag and drop between icons, folders, Trash and other applications such as Nautilus\n* Context menus on the background and on icons, plus a panel indicator\n* Preferences for icon size, labels, placement of new icons, sorting and behaviour\n\nThe desktop is drawn by a small GJS/GTK4 helper process launched by the extension.\nClipboard: the extension reads and writes the clipboard only when you copy, cut or paste files on the desktop (Nautilus-compatible format). Nothing is sent anywhere.",
+  "description": "Desktop icons for GNOME on Wayland, in the style of DING.\n\n* Shows the contents of the Desktop folder, plus optional Home, Trash and mounted drives\n* Multiple selection (Ctrl/Shift click, rubber band) and free or grid-aligned positioning\n* Drag and drop between icons, folders, Trash and other applications such as Nautilus\n* Context menus on the background and on icons, plus a panel indicator\n* “Add to Desktop” in the right-click menu of applications (app grid, dash) and of files and folders in Files\n* Follows the system language (English, Italian, German, French, Spanish, Portuguese)\n* Preferences for icon size, labels, placement of new icons, sorting and behaviour\n\nThe desktop is drawn by a small GJS/GTK4 helper process launched by the extension.\nClipboard: the extension reads and writes the clipboard only when you copy, cut or paste files on the desktop (Nautilus-compatible format). Nothing is sent anywhere.\nFiles integration: the extension writes a small nautilus-python extension (~/.local/share/nautilus-python/extensions) or, without nautilus-python, a Nautilus script (~/.local/share/nautilus/scripts); both are removed when the extension is disabled and can be turned off in the preferences.",
   "shell-version": [
     "51"
   ],
   "settings-schema": "org.gnome.shell.extensions.deskicons",
   "gettext-domain": "deskicons",
   "url": "https://github.com/euschi/gnome_desktop_extension",
-  "version-name": "0.2.2"
+  "version-name": "0.3.0"
 }
