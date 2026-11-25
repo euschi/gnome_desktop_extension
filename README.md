@@ -67,6 +67,8 @@ translation is available (currently: Italian). See [Translations](#translations)
   open in terminal, properties. Dedicated entries for Trash (empty) and
   drives (unmount / eject).
 - **Panel indicator** in the top-right corner with quick actions.
+- **Add to Desktop** everywhere: in the right-click menu of applications (app
+  grid and dash) and of files and folders in Files (see below).
 
 **Integration**
 - Copy/cut/paste compatible with Nautilus (copy in Nautilus and paste on the
@@ -74,6 +76,8 @@ translation is available (currently: Italian). See [Translations](#translations)
 - File operations performed through Nautilus: progress windows, conflict
   handling and **undo/redo shared** with the file manager.
 - Multi-monitor: icons on all monitors or only on the primary one.
+- **Follows the system language**: English, Italian, German, French, Spanish
+  and Portuguese (translations in `po/`).
 
 ---
 
@@ -235,6 +239,26 @@ confirming the dialog on first launch. This sets the executable permission
 and the `metadata::trusted` attribute (the same one used by DING). In the
 settings you can choose to always launch them without asking.
 
+### Add to Desktop
+
+- **Applications** — right click on an app in the app grid or in the dash →
+  **Add to Desktop**: its launcher is copied to the Desktop and already
+  trusted. If it is already there, the entry becomes **Remove from Desktop**.
+- **Files and folders** — right click in Files (Nautilus) → **Add to
+  Desktop**: a link (symbolic link) to the item is created on the Desktop;
+  `.desktop` launchers are copied and trusted instead.
+  - with **nautilus-python** installed (`nautilus-python` on Arch and Fedora,
+    `python3-nautilus` on Debian/Ubuntu) the
+    entry is directly in the menu; Files must be restarted once
+    (`nautilus -q`). The extension writes
+    `~/.local/share/nautilus-python/extensions/deskicons-add-to-desktop.py`;
+  - without it nothing has to be installed: the entry is under **Scripts →
+    Add to Desktop** (a script in `~/.local/share/nautilus/scripts/`, named in
+    the system language).
+
+  These files are removed when the extension is disabled or when the option
+  *“Add to Desktop” in Files* is turned off in the settings.
+
 ### Panel indicator
 
 The icon in the top-right offers: **Show icons** (hides/shows everything),
@@ -271,6 +295,7 @@ Every change is applied **immediately**, without restarting.
 | Behaviour | Open items with | double click | or single click |
 | | Untrusted launchers | ask for confirmation | or always launch |
 | | Terminal | automatic | custom command, e.g. `kitty` (the folder is passed as working directory) |
+| | “Add to Desktop” in Files | yes | entry in the right-click menu of Files |
 | | Confirm before trashing | no | dialog before moving to trash |
 | | Panel indicator | yes | shows/hides the panel icon |
 | | Show icons on the desktop | yes | same as the indicator toggle |
@@ -370,11 +395,14 @@ gnome_desktop_extension/
     ├── prefs.js               # settings app (libadwaita)
     ├── lib/
     │   ├── desktopManager.js  # helper process and window management
-    │   └── indicator.js       # panel indicator
+    │   ├── indicator.js       # panel indicator
+    │   ├── addToDesktop.js    # "Add to Desktop" in app menus and in Files
+    │   └── nautilusPython.js  # nautilus-python detection (shared with prefs)
     ├── schemas/
     │   └── org.gnome.shell.extensions.deskicons.gschema.xml
     └── app/                   # GTK4 helper
         ├── main.js            # startup, arguments, GSettings
+        ├── addToDesktop.js    # "Add to Desktop" worker (links/copies)
         ├── desktopController.js
         ├── desktopWindow.js
         ├── desktopModel.js
