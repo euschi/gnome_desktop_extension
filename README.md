@@ -67,8 +67,8 @@ translation is available (currently: Italian). See [Translations](#translations)
   open in terminal, properties. Dedicated entries for Trash (empty) and
   drives (unmount / eject).
 - **Panel indicator** in the top-right corner with quick actions.
-- **Add to Desktop** everywhere: in the right-click menu of applications (app
-  grid and dash) and of files and folders in Files (see below).
+- **Add to Desktop** in the right-click menu of applications (app grid and
+  dash) and, with an optional add-on, of files and folders in Files.
 
 **Integration**
 - Copy/cut/paste compatible with Nautilus (copy in Nautilus and paste on the
@@ -241,23 +241,52 @@ settings you can choose to always launch them without asking.
 
 ### Add to Desktop
 
-- **Applications** — right click on an app in the app grid or in the dash →
-  **Add to Desktop**: its launcher is copied to the Desktop and already
-  trusted. If it is already there, the entry becomes **Remove from Desktop**.
-- **Files and folders** — right click in Files (Nautilus) → **Add to
-  Desktop**: a link (symbolic link) to the item is created on the Desktop;
-  `.desktop` launchers are copied and trusted instead.
-  - with **nautilus-python** installed (`nautilus-python` on Arch and Fedora,
-    `python3-nautilus` on Debian/Ubuntu) the
-    entry is directly in the menu; Files must be restarted once
-    (`nautilus -q`). The extension writes
-    `~/.local/share/nautilus-python/extensions/deskicons-add-to-desktop.py`;
-  - without it nothing has to be installed: the entry is under **Scripts →
-    Add to Desktop** (a script in `~/.local/share/nautilus/scripts/`, named in
-    the system language).
+Right click on an app in the app grid or in the dash → **Add to Desktop**:
+its launcher is copied to the Desktop and already trusted. If it is already
+there, the entry becomes **Remove from Desktop**.
 
-  These files are removed when the extension is disabled or when the option
-  *“Add to Desktop” in Files* is turned off in the settings.
+### Add to Desktop in Files
+
+An optional **Files (Nautilus) add-on** puts **Add to Desktop** in the
+right-click menu of files and folders: a link (symbolic link) to the item is
+created on the Desktop, while `.desktop` launchers are copied and trusted. The
+entry follows the system language and is hidden while the extension is off.
+
+The add-on is **not part of the extension package**: it is the single file
+[`nautilus/deskicons-add-to-desktop.py`](nautilus/deskicons-add-to-desktop.py)
+and it only calls the extension over D-Bus (`io.github.euschi.DeskIcons`).
+
+1. Install nautilus-python: `nautilus-python` on Arch and Fedora,
+   `python3-nautilus` on Debian/Ubuntu.
+2. Install the add-on, from a clone of the project:
+
+   ```sh
+   make install-nautilus
+   ```
+
+   or without cloning:
+
+   ```sh
+   mkdir -p ~/.local/share/nautilus-python/extensions
+   curl -L -o ~/.local/share/nautilus-python/extensions/deskicons-add-to-desktop.py \
+     https://raw.githubusercontent.com/euschi/gnome_desktop_extension/main/nautilus/deskicons-add-to-desktop.py
+   nautilus -q
+   ```
+
+To remove it: `make uninstall-nautilus`, or delete that file and run
+`nautilus -q`.
+
+#### D-Bus interface
+
+The extension owns `io.github.euschi.DeskIcons` on the session bus; object
+`/io/github/euschi/DeskIcons`, interface `io.github.euschi.DeskIcons.Desktop1`:
+
+| Member | Description |
+| --- | --- |
+| `AddFiles(as uris)` | adds the given `file://` URIs to the Desktop |
+| `Label` (s) | translated label of the menu entry |
+| `Tooltip` (s) | translated tooltip |
+| `DesktopPath` (s) | path of the Desktop folder |
 
 ### Panel indicator
 
@@ -295,7 +324,7 @@ Every change is applied **immediately**, without restarting.
 | Behaviour | Open items with | double click | or single click |
 | | Untrusted launchers | ask for confirmation | or always launch |
 | | Terminal | automatic | custom command, e.g. `kitty` (the folder is passed as working directory) |
-| | “Add to Desktop” in Files | yes | entry in the right-click menu of Files |
+| | “Add to Desktop” in Files | — | state of the optional Files add-on, with installation instructions |
 | | Confirm before trashing | no | dialog before moving to trash |
 | | Panel indicator | yes | shows/hides the panel icon |
 | | Show icons on the desktop | yes | same as the indicator toggle |
@@ -387,6 +416,8 @@ so the project is split into two processes (the same approach as DING):
 gnome_desktop_extension/
 ├── Makefile                   # schemas, locale, pot, install, uninstall, zip, debug
 ├── po/                        # translations (deskicons.pot template, <lang>.po)
+├── nautilus/
+│   └── deskicons-add-to-desktop.py  # optional Files add-on (not in the zip)
 ├── launcher/
 │   └── deskicons-settings.desktop   # "Desktop Icons" entry in the app menu
 └── extension/                 # = the installed extension folder
@@ -396,13 +427,12 @@ gnome_desktop_extension/
     ├── lib/
     │   ├── desktopManager.js  # helper process and window management
     │   ├── indicator.js       # panel indicator
-    │   ├── addToDesktop.js    # "Add to Desktop" in app menus and in Files
-    │   └── nautilusPython.js  # nautilus-python detection (shared with prefs)
+    │   ├── addToDesktop.js    # "Add to Desktop": app menus and D-Bus service
+    │   └── filesAddon.js      # state of the Files add-on (for prefs)
     ├── schemas/
     │   └── org.gnome.shell.extensions.deskicons.gschema.xml
     └── app/                   # GTK4 helper
         ├── main.js            # startup, arguments, GSettings
-        ├── addToDesktop.js    # "Add to Desktop" worker (links/copies)
         ├── desktopController.js
         ├── desktopWindow.js
         ├── desktopModel.js
