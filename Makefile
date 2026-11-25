@@ -51,12 +51,12 @@ uninstall:
 # Optional Files add-on (needs nautilus-python): not part of the extension zip
 install-nautilus:
 	install -Dm644 nautilus/$(NAUTILUS_ADDON) $(NAUTILUS_ADDON_DIR)/$(NAUTILUS_ADDON)
-	-nautilus -q
+	@nautilus -q 2>/dev/null || true
 	@echo "Add-on installato: riapri File."
 
 uninstall-nautilus:
 	rm -f $(NAUTILUS_ADDON_DIR)/$(NAUTILUS_ADDON)
-	-nautilus -q
+	@nautilus -q 2>/dev/null || true
 
 zip: schemas
 	mkdir -p dist
