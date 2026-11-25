@@ -2,3 +2,4 @@ extension/schemas/gschemas.compiled
 dist/
 *.zip
 extension/locale/
+__pycache__/
