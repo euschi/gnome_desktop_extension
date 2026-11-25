@@ -17,324 +17,325 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: extension/prefs.js:29
+#: extension/prefs.js:26
 msgid "Shadow"
 msgstr "Schatten"
 
-#: extension/prefs.js:29
+#: extension/prefs.js:26
 msgid "Dark Background"
 msgstr "Dunkler Hintergrund"
 
-#: extension/prefs.js:30
+#: extension/prefs.js:27
 msgid "None"
 msgstr "Keiner"
 
-#: extension/prefs.js:31
+#: extension/prefs.js:28
 msgid "Top Left"
 msgstr "Oben links"
 
-#: extension/prefs.js:31
+#: extension/prefs.js:28
 msgid "Top Right"
 msgstr "Oben rechts"
 
-#: extension/prefs.js:32
+#: extension/prefs.js:29
 msgid "Bottom Left"
 msgstr "Unten links"
 
-#: extension/prefs.js:32
+#: extension/prefs.js:29
 msgid "Bottom Right"
 msgstr "Unten rechts"
 
-#: extension/prefs.js:33
+#: extension/prefs.js:30
 msgid "Columns First (vertical)"
 msgstr "Zuerst Spalten (vertikal)"
 
-#: extension/prefs.js:34
+#: extension/prefs.js:31
 msgid "Rows First (horizontal)"
 msgstr "Zuerst Zeilen (horizontal)"
 
-#: extension/prefs.js:35 extension/lib/indicator.js:61
+#: extension/prefs.js:32 extension/lib/indicator.js:61
 #: extension/app/menus.js:70
 msgid "Name"
 msgstr "Name"
 
-#: extension/prefs.js:35 extension/lib/indicator.js:62
+#: extension/prefs.js:32 extension/lib/indicator.js:62
 #: extension/app/menus.js:70
 msgid "Modification Date"
 msgstr "Änderungsdatum"
 
-#: extension/prefs.js:36 extension/lib/indicator.js:63
+#: extension/prefs.js:33 extension/lib/indicator.js:63
 #: extension/app/menus.js:71
 msgid "Type"
 msgstr "Typ"
 
-#: extension/prefs.js:36 extension/lib/indicator.js:64
+#: extension/prefs.js:33 extension/lib/indicator.js:64
 #: extension/app/menus.js:71
 msgid "Size"
 msgstr "Größe"
 
-#: extension/prefs.js:37
+#: extension/prefs.js:34
 msgid "All Monitors"
 msgstr "Alle Bildschirme"
 
-#: extension/prefs.js:37
+#: extension/prefs.js:34
 msgid "Primary Monitor Only"
 msgstr "Nur Hauptbildschirm"
 
-#: extension/prefs.js:38
+#: extension/prefs.js:35
 msgid "Double Click"
 msgstr "Doppelklick"
 
-#: extension/prefs.js:38
+#: extension/prefs.js:35
 msgid "Single Click"
 msgstr "Einfachklick"
 
-#: extension/prefs.js:39
+#: extension/prefs.js:36
 msgid "Ask for Confirmation"
 msgstr "Nach Bestätigung fragen"
 
-#: extension/prefs.js:39
+#: extension/prefs.js:36
 msgid "Always Launch"
 msgstr "Immer starten"
 
-#: extension/prefs.js:88
+#: extension/prefs.js:76
+msgid "“Add to Desktop” in Files"
+msgstr "„Zum Schreibtisch hinzufügen“ in Dateien"
+
+#: extension/prefs.js:78
+msgid "Installed: the entry is in the right-click menu of files and folders."
+msgstr "Installiert: Der Eintrag befindet sich im Rechtsklickmenü von Dateien und Ordnern."
+
+#: extension/prefs.js:79
+msgid ""
+"Optional add-on for Files (requires nautilus-python), installed separately."
+msgstr "Optionale Erweiterung für Dateien (benötigt nautilus-python), wird separat installiert."
+
+#: extension/prefs.js:83
+msgid "How to Install"
+msgstr "Installationsanleitung"
+
+#: extension/prefs.js:104
 msgid "Appearance"
 msgstr "Darstellung"
 
-#: extension/prefs.js:89
+#: extension/prefs.js:105
 msgid "Icons"
 msgstr "Symbole"
 
-#: extension/prefs.js:90
+#: extension/prefs.js:106
 msgid "Icon Size"
 msgstr "Symbolgröße"
 
-#: extension/prefs.js:90
+#: extension/prefs.js:106
 msgid "In pixels"
 msgstr "In Pixeln"
 
-#: extension/prefs.js:91
+#: extension/prefs.js:107
 msgid "Spacing"
 msgstr "Abstand"
 
-#: extension/prefs.js:91
+#: extension/prefs.js:107
 msgid "Space between icons in pixels"
 msgstr "Abstand zwischen Symbolen in Pixeln"
 
-#: extension/prefs.js:92
+#: extension/prefs.js:108
 msgid "Show Thumbnails"
 msgstr "Vorschaubilder anzeigen"
 
-#: extension/prefs.js:92
+#: extension/prefs.js:108
 msgid "Previews of images, videos and documents"
 msgstr "Vorschau von Bildern, Videos und Dokumenten"
 
-#: extension/prefs.js:94
+#: extension/prefs.js:110
 msgid "Labels"
 msgstr "Beschriftungen"
 
-#: extension/prefs.js:95
+#: extension/prefs.js:111
 msgid "Maximum Lines"
 msgstr "Maximale Zeilen"
 
-#: extension/prefs.js:96
+#: extension/prefs.js:112
 msgid "Style"
 msgstr "Stil"
 
-#: extension/prefs.js:100
+#: extension/prefs.js:116
 msgid "Layout"
 msgstr "Anordnung"
 
-#: extension/prefs.js:101
+#: extension/prefs.js:117
 msgid "New Icons"
 msgstr "Neue Symbole"
 
-#: extension/prefs.js:102
+#: extension/prefs.js:118
 msgid "Start Corner"
 msgstr "Startecke"
 
-#: extension/prefs.js:103
+#: extension/prefs.js:119
 msgid "Where new icons appear"
 msgstr "Wo neue Symbole erscheinen"
 
-#: extension/prefs.js:104
+#: extension/prefs.js:120
 msgid "Fill Direction"
 msgstr "Füllrichtung"
 
-#: extension/prefs.js:105
+#: extension/prefs.js:121
 msgid "Monitors"
 msgstr "Bildschirme"
 
-#: extension/prefs.js:107
+#: extension/prefs.js:123
 msgid "Grid"
 msgstr "Raster"
 
-#: extension/prefs.js:108 extension/app/menus.js:81
+#: extension/prefs.js:124 extension/app/menus.js:81
 msgid "Align to Grid"
 msgstr "Am Raster ausrichten"
 
-#: extension/prefs.js:109
+#: extension/prefs.js:125
 msgid "When off, icons stay exactly where you drop them"
 msgstr "Wenn aus, bleiben Symbole genau dort, wo sie abgelegt werden"
 
-#: extension/prefs.js:110 extension/lib/indicator.js:48
+#: extension/prefs.js:126 extension/lib/indicator.js:48
 #: extension/app/menus.js:80
 msgid "Keep Arranged"
 msgstr "Geordnet halten"
 
-#: extension/prefs.js:111
+#: extension/prefs.js:127
 msgid "Icons are always laid out according to the sort order"
 msgstr "Symbole werden immer gemäß der Sortierung angeordnet"
 
-#: extension/prefs.js:112 extension/lib/indicator.js:58
+#: extension/prefs.js:128 extension/lib/indicator.js:58
 #: extension/app/menus.js:83
 msgid "Sort By"
 msgstr "Sortieren nach"
 
-#: extension/prefs.js:113 extension/app/menus.js:74
+#: extension/prefs.js:129 extension/app/menus.js:74
 msgid "Reverse Order"
 msgstr "Umgekehrte Reihenfolge"
 
-#: extension/prefs.js:114
+#: extension/prefs.js:130
 msgid "Folders Before Files"
 msgstr "Ordner vor Dateien"
 
-#: extension/prefs.js:116
+#: extension/prefs.js:132
 msgid "Margins"
 msgstr "Ränder"
 
-#: extension/prefs.js:117
+#: extension/prefs.js:133
 msgid "Top"
 msgstr "Oben"
 
-#: extension/prefs.js:118
+#: extension/prefs.js:134
 msgid "Bottom"
 msgstr "Unten"
 
-#: extension/prefs.js:119
+#: extension/prefs.js:135
 msgid "Left"
 msgstr "Links"
 
-#: extension/prefs.js:120
+#: extension/prefs.js:136
 msgid "Right"
 msgstr "Rechts"
 
-#: extension/prefs.js:121
+#: extension/prefs.js:137
 msgid "Free space at the screen edges, in pixels"
 msgstr "Freier Platz an den Bildschirmrändern, in Pixeln"
 
-#: extension/prefs.js:124
+#: extension/prefs.js:140
 msgid "Terminal (empty = automatic)"
 msgstr "Terminal (leer = automatisch)"
 
-#: extension/prefs.js:127
+#: extension/prefs.js:143
 msgid "Reset to Defaults"
 msgstr "Auf Standardwerte zurücksetzen"
 
-#: extension/prefs.js:136
+#: extension/prefs.js:150
 msgid "Behavior"
 msgstr "Verhalten"
 
-#: extension/prefs.js:137
+#: extension/prefs.js:151
 msgid "Opening"
 msgstr "Öffnen"
 
-#: extension/prefs.js:138
+#: extension/prefs.js:152
 msgid "Open Items With"
 msgstr "Objekte öffnen mit"
 
-#: extension/prefs.js:139
+#: extension/prefs.js:153
 msgid "Untrusted .desktop Launchers"
 msgstr "Nicht vertrauenswürdige .desktop-Starter"
 
-#: extension/prefs.js:142 extension/prefs.js:165
+#: extension/prefs.js:156 extension/prefs.js:175
 msgid "Files"
 msgstr "Dateien"
 
-#: extension/prefs.js:143
-msgid "“Add to Desktop” in Files"
-msgstr "„Zum Schreibtisch hinzufügen“ in Dateien"
-
-#: extension/prefs.js:145
-msgid ""
-"Entry in the right-click menu of files and folders. Restart Files to apply."
-msgstr "Eintrag im Rechtsklickmenü von Dateien und Ordnern. Starten Sie Dateien neu, um die Änderung zu übernehmen."
-
-#: extension/prefs.js:146
-msgid ""
-"The entry is under “Scripts” in the right-click menu. For a direct entry, "
-"install nautilus-python (python-nautilus on some distributions) and restart "
-"Files."
-msgstr "Der Eintrag befindet sich unter „Skripte“ im Rechtsklickmenü. Für einen direkten Eintrag installieren Sie nautilus-python (bei manchen Distributionen python-nautilus) und starten Dateien neu."
-
-#: extension/prefs.js:147
+#: extension/prefs.js:157
 msgid ""
 "Applications can be added from the right-click menu of the app grid and the "
 "dash."
 msgstr "Anwendungen lassen sich über das Rechtsklickmenü der Anwendungsübersicht und des Docks hinzufügen."
 
-#: extension/prefs.js:148
+#: extension/prefs.js:158
 msgid "Safety"
 msgstr "Sicherheit"
 
-#: extension/prefs.js:149
+#: extension/prefs.js:159
 msgid "Confirm Before Moving to Trash"
 msgstr "Vor dem Verschieben in den Papierkorb bestätigen"
 
-#: extension/prefs.js:151
+#: extension/prefs.js:161
 msgid "Panel"
 msgstr "Leiste"
 
-#: extension/prefs.js:152
+#: extension/prefs.js:162
 msgid "Show Panel Indicator"
 msgstr "Symbol in der Leiste anzeigen"
 
-#: extension/prefs.js:153
+#: extension/prefs.js:163
 msgid "Show Icons on the Desktop"
 msgstr "Symbole auf dem Schreibtisch anzeigen"
 
-#: extension/prefs.js:158
+#: extension/prefs.js:168
 msgid "Items"
 msgstr "Objekte"
 
-#: extension/prefs.js:159
+#: extension/prefs.js:169
 msgid "Special Items"
 msgstr "Besondere Objekte"
 
-#: extension/prefs.js:160
+#: extension/prefs.js:170
 msgid "Home Folder"
 msgstr "Persönlicher Ordner"
 
-#: extension/prefs.js:161 extension/app/desktopModel.js:227
+#: extension/prefs.js:171 extension/app/desktopModel.js:227
 msgid "Trash"
 msgstr "Papierkorb"
 
-#: extension/prefs.js:162
+#: extension/prefs.js:172
 msgid "Mounted Drives"
 msgstr "Eingehängte Laufwerke"
 
-#: extension/prefs.js:162
+#: extension/prefs.js:172
 msgid "Disks and USB sticks"
 msgstr "Festplatten und USB-Sticks"
 
-#: extension/prefs.js:163
+#: extension/prefs.js:173
 msgid "Network Drives"
 msgstr "Netzlaufwerke"
 
-#: extension/prefs.js:166 extension/app/menus.js:82
+#: extension/prefs.js:176 extension/app/menus.js:82
 msgid "Show Hidden Files"
 msgstr "Verborgene Dateien anzeigen"
 
-#: extension/lib/addToDesktop.js:112 extension/lib/addToDesktop.js:127
-#: extension/lib/addToDesktop.js:133 extension/lib/addToDesktop.js:189
+#: extension/lib/addToDesktop.js:156 extension/lib/addToDesktop.js:170
+#: extension/lib/addToDesktop.js:176 extension/lib/addToDesktop.js:214
 msgid "Add to Desktop"
 msgstr "Zum Schreibtisch hinzufügen"
 
-#: extension/lib/addToDesktop.js:133
+#: extension/lib/addToDesktop.js:176
 msgid "Remove from Desktop"
 msgstr "Vom Schreibtisch entfernen"
 
-#: extension/lib/addToDesktop.js:194
+#: extension/lib/addToDesktop.js:218
 msgid "Show the selected items on the desktop"
 msgstr "Die ausgewählten Objekte auf dem Schreibtisch anzeigen"
 
@@ -602,33 +603,25 @@ msgid "Terminal command (empty = automatic)"
 msgstr "Terminal-Befehl (leer = automatisch)"
 
 #: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:140
-msgid "Add “Add to Desktop” to the context menu of Files"
-msgstr "„Zum Schreibtisch hinzufügen“ zum Kontextmenü von Dateien hinzufügen"
-
-#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:144
-msgid "Name of the installed Nautilus script (internal)"
-msgstr "Name des installierten Nautilus-Skripts (intern)"
-
-#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:148
 msgid "Show panel indicator"
 msgstr "Symbol in der Leiste anzeigen"
 
-#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:154
+#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:146
 msgid "Show the Home folder"
 msgstr "Persönlichen Ordner anzeigen"
 
-#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:158
+#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:150
 msgid "Show the Trash"
 msgstr "Papierkorb anzeigen"
 
-#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:162
+#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:154
 msgid "Show mounted drives"
 msgstr "Eingehängte Laufwerke anzeigen"
 
-#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:166
+#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:158
 msgid "Show network drives"
 msgstr "Netzlaufwerke anzeigen"
 
-#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:170
+#: extension/schemas/org.gnome.shell.extensions.deskicons.gschema.xml:162
 msgid "Show hidden files"
 msgstr "Verborgene Dateien anzeigen"

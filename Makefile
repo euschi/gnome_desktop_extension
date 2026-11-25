@@ -4,13 +4,15 @@ SRC       := $(CURDIR)/extension
 EXT_DIR   := $(HOME)/.local/share/gnome-shell/extensions/$(UUID)
 APPS_DIR  := $(HOME)/.local/share/applications
 LAUNCHER  := deskicons-settings.desktop
+NAUTILUS_ADDON     := deskicons-add-to-desktop.py
+NAUTILUS_ADDON_DIR := $(HOME)/.local/share/nautilus-python/extensions
 
 PO_FILES  := $(wildcard po/*.po)
 MO_FILES  := $(patsubst po/%.po,$(SRC)/locale/%/LC_MESSAGES/$(DOMAIN).mo,$(PO_FILES))
 JS_FILES  := $(SRC)/extension.js $(SRC)/prefs.js $(wildcard $(SRC)/lib/*.js) $(wildcard $(SRC)/app/*.js)
 SCHEMA    := $(SRC)/schemas/org.gnome.shell.extensions.deskicons.gschema.xml
 
-.PHONY: all schemas locale pot install uninstall zip clean debug lint
+.PHONY: all schemas locale pot install uninstall install-nautilus uninstall-nautilus zip clean debug lint
 
 all: schemas locale
 
@@ -45,6 +47,16 @@ uninstall:
 	-gnome-extensions disable $(UUID)
 	rm -f $(EXT_DIR)
 	rm -f $(APPS_DIR)/$(LAUNCHER)
+
+# Optional Files add-on (needs nautilus-python): not part of the extension zip
+install-nautilus:
+	install -Dm644 nautilus/$(NAUTILUS_ADDON) $(NAUTILUS_ADDON_DIR)/$(NAUTILUS_ADDON)
+	@nautilus -q 2>/dev/null || true
+	@echo "Add-on installato: riapri File."
+
+uninstall-nautilus:
+	rm -f $(NAUTILUS_ADDON_DIR)/$(NAUTILUS_ADDON)
+	@nautilus -q 2>/dev/null || true
 
 zip: schemas
 	mkdir -p dist

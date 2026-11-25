@@ -6,7 +6,7 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import {DesktopManager} from './lib/desktopManager.js';
 import {DeskIconsIndicator} from './lib/indicator.js';
-import {AppMenuIntegration, FilesIntegration} from './lib/addToDesktop.js';
+import {AppMenuIntegration, DesktopService} from './lib/addToDesktop.js';
 
 export default class DeskIconsExtension extends Extension {
     enable() {
@@ -14,10 +14,10 @@ export default class DeskIconsExtension extends Extension {
         this._manager = new DesktopManager(this.path, this._settings);
         this._manager.enable();
 
-        this._appMenu = new AppMenuIntegration(this.path);
+        this._appMenu = new AppMenuIntegration();
         this._appMenu.enable();
-        this._files = new FilesIntegration(this.path, this._settings);
-        this._files.enable();
+        this._service = new DesktopService();
+        this._service.enable();
 
         this._settings.connectObject('changed::show-indicator',
             () => this._syncIndicator(), this);
@@ -28,8 +28,8 @@ export default class DeskIconsExtension extends Extension {
         this._settings.disconnectObject(this);
         this._indicator?.destroy();
         this._indicator = null;
-        this._files.destroy();
-        this._files = null;
+        this._service.destroy();
+        this._service = null;
         this._appMenu.destroy();
         this._appMenu = null;
         this._manager.destroy();
