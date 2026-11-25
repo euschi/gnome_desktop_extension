@@ -7,6 +7,11 @@ import Gtk from 'gi://Gtk';
 
 import {ExtensionPreferences, gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
+import {hasNautilusPython} from './lib/nautilusPython.js';
+
+// Bookkeeping keys, not user preferences
+const INTERNAL_KEYS = ['nautilus-script-name'];
+
 export default class DeskIconsPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
         const settings = this.getSettings();
@@ -122,8 +127,10 @@ export default class DeskIconsPreferences extends ExtensionPreferences {
         const reset = new Adw.ButtonRow({title: _('Reset to Defaults')});
         reset.add_css_class('destructive-action');
         reset.connect('activated', () => {
-            for (const key of settings.settings_schema.list_keys())
-                settings.reset(key);
+            for (const key of settings.settings_schema.list_keys()) {
+                if (!INTERNAL_KEYS.includes(key))
+                    settings.reset(key);
+            }
         });
 
         page(_('Behavior'), 'preferences-system-symbolic', [
@@ -132,6 +139,12 @@ export default class DeskIconsPreferences extends ExtensionPreferences {
                 comboRow('launcher-policy', _('Untrusted .desktop Launchers'), LAUNCHERS),
                 terminal,
             ]),
+            group(_('Files'), [
+                switchRow('files-integration', _('“Add to Desktop” in Files'),
+                    hasNautilusPython()
+                        ? _('Entry in the right-click menu of files and folders. Restart Files to apply.')
+                        : _('The entry is under “Scripts” in the right-click menu. For a direct entry, install nautilus-python (python-nautilus on some distributions) and restart Files.')),
+            ], _('Applications can be added from the right-click menu of the app grid and the dash.')),
             group(_('Safety'), [
                 switchRow('confirm-trash', _('Confirm Before Moving to Trash')),
             ]),

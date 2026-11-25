@@ -135,6 +135,14 @@
       <default>''</default>
       <summary>Terminal command (empty = automatic)</summary>
     </key>
+    <key name="files-integration" type="b">
+      <default>true</default>
+      <summary>Add “Add to Desktop” to the context menu of Files</summary>
+    </key>
+    <key name="nautilus-script-name" type="s">
+      <default>''</default>
+      <summary>Name of the installed Nautilus script (internal)</summary>
+    </key>
     <key name="show-indicator" type="b">
       <default>true</default>
       <summary>Show panel indicator</summary>
